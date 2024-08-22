@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PublicUserView {
+public class LoginUserDtoResponse {
     String avatar;
     String email;
     String id;
     String name;
     String role;
+//    String token;
 }

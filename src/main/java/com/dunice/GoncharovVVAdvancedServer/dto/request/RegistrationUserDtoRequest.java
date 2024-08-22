@@ -1,4 +1,4 @@
-package com.dunice.GoncharovVVAdvancedServer.dto.response;
+package com.dunice.GoncharovVVAdvancedServer.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PublicUserView {
+public class RegistrationUserDtoRequest {
     String avatar;
     String email;
-    String id;
     String name;
+    String password;
     String role;
+
 }
