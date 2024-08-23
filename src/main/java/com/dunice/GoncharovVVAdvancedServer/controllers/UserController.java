@@ -11,21 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 @Validated
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping()
-    public ResponseEntity getUsersList(){
-        return ResponseEntity.ok("HelloWorld");
-    }
-
-    @PostMapping()
-    public ResponseEntity<LoginUserDtoResponse> registrationUser(){
-        return null;
+    @PostMapping("/auth/register")
+    public ResponseEntity<String> registrationUser(){
+        return ResponseEntity.ok("Uri is good");
     }
 
 
