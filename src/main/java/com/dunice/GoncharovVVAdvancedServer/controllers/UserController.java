@@ -2,6 +2,8 @@ package com.dunice.GoncharovVVAdvancedServer.controllers;
 
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserDtoRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserDtoResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +19,11 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/auth/register")
-    public ResponseEntity<LoginUserDtoResponse> registrationUser(
+    public ResponseEntity<CustomSuccessResponse<LoginUserDtoResponse>> registrationUser(
             @RequestBody
             RegistrationUserDtoRequest registration) {
 
-        return null;
+        return ResponseEntity.ok(userService.registrationUser(registration));
     }
 
 

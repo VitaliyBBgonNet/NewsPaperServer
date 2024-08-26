@@ -4,25 +4,32 @@ import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserDtoRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserDtoResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.parser.Entity;
-
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserMapper userMapper;
 
     public CustomSuccessResponse<LoginUserDtoResponse> registrationUser(
             RegistrationUserDtoRequest requestForRegistration) {
 
-        userRepository.save(userMapper.toEntityRegistrationUser(requestForRegistration));
+        String encryptedPassword = passwordEncoder.encode(requestForRegistration.getPassword());
+
+        UsersEntity saveEntity = userMapper.toEntityRegistrationUser(requestForRegistration);
+
+        saveEntity.setPassword(encryptedPassword);
+
+        userRepository.save(saveEntity);
 
         LoginUserDtoResponse responseLogin = userMapper.toLoginDto(requestForRegistration);
 
