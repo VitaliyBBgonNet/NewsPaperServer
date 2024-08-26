@@ -17,6 +17,7 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     UsersEntity toEntityRegistrationUser(RegistrationUserDtoRequest registrationDto);
 
+    @Mapping(target = "token", ignore = true)
     @Mapping(target = "id", ignore = true)
     LoginUserDtoResponse toLoginDto(RegistrationUserDtoRequest registrationDto);
 

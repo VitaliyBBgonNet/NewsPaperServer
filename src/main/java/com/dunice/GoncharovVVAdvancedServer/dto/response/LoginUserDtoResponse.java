@@ -13,5 +13,5 @@ public class LoginUserDtoResponse {
     String id;
     String name;
     String role;
-//    String token;
+    String token;
 }

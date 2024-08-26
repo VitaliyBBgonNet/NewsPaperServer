@@ -6,6 +6,7 @@ import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserDtoResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.repository.UserRepository;
+import com.dunice.GoncharovVVAdvancedServer.tokens.TokenSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final TokenSecurity jwtToken;
+
     public CustomSuccessResponse<LoginUserDtoResponse> registrationUser(
             RegistrationUserDtoRequest requestForRegistration) {
 
@@ -32,6 +35,8 @@ public class UserService {
         userRepository.save(saveEntity);
 
         LoginUserDtoResponse responseLogin = userMapper.toLoginDto(requestForRegistration);
+
+        responseLogin.setToken(jwtToken.generateToken(saveEntity.getId()));
 
         return new CustomSuccessResponse<>(responseLogin);
     }
