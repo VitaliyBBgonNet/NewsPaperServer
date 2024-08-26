@@ -1,4 +1,13 @@
 package com.dunice.GoncharovVVAdvancedServer.exeception;
 
-public class CustomException {
+import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public class CustomException extends RuntimeException {
+
+    private final ErrorCodes errorCodes;
+
 }

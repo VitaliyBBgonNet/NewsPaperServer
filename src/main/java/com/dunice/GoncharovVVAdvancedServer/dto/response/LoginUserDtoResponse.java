@@ -8,10 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginUserDtoResponse {
-    String avatar;
-    String email;
-    String id;
-    String name;
-    String role;
-    String token;
+    private String avatar;
+
+    private String email;
+
+    private String id;
+
+    private String name;
+
+    private String role;
+
+    private String token;
 }
