@@ -1,10 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.exeception;
 
-
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,11 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
 
-
 @ControllerAdvice
 public class CustomErrorAdvice {
-
-
 
     @ExceptionHandler
     public ResponseEntity<CustomSuccessResponse> handle(CustomException e) {
@@ -27,7 +21,8 @@ public class CustomErrorAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<CustomSuccessResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<CustomSuccessResponse> handlerMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception) {
 
         BindingResult bindingResult = exception.getBindingResult();
 

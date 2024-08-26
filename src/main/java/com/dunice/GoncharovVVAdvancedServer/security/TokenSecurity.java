@@ -1,16 +1,13 @@
-package com.dunice.GoncharovVVAdvancedServer.tokens;
+package com.dunice.GoncharovVVAdvancedServer.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.*;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class TokenSecurity {
@@ -21,7 +18,7 @@ public class TokenSecurity {
     @Value("${jwt.expiration}")
     private Long expirationTime;
 
-    public String generateToken(Long id) {
+    public String generateToken(UUID id) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, id.toString());
     }
@@ -31,13 +28,21 @@ public class TokenSecurity {
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
         SecretKey key = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS512.getJcaName());
 
-        return Jwts.builder()
+        return "Bearer " + Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
+    }
+
+    public Boolean isTokenValid(String token){
+       return true;
+    }
+
+    public String getIdFromToken(String token){
+        return "";
     }
 
 }

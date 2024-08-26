@@ -7,10 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PublicUserView {
-    String avatar;
-    String email;
-    String id;
-    String name;
-    String role;
+public class PublicUserResponse {
+    private String avatar;
+
+    private String email;
+
+    private String id;
+    
+    private String name;
+
+    private String role;
 }

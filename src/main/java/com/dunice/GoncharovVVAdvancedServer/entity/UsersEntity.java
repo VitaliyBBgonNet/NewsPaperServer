@@ -1,19 +1,22 @@
 package com.dunice.GoncharovVVAdvancedServer.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
 
-import jakarta.persistence.*;
-import lombok.*;
+import java.util.UUID;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "users")
 public class UsersEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     private String email;
 
@@ -24,6 +27,5 @@ public class UsersEntity {
     private String role;
 
     private String avatar;
-
 
 }
