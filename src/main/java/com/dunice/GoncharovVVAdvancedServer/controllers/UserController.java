@@ -3,7 +3,6 @@ package com.dunice.GoncharovVVAdvancedServer.controllers;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserDtoRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserDtoResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
-import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ public class UserController {
     public ResponseEntity<CustomSuccessResponse<LoginUserDtoResponse>> registrationUser(
             @RequestBody
             @Valid RegistrationUserDtoRequest registration) {
-
         return ResponseEntity.ok(userService.registrationUser(registration));
     }
 }

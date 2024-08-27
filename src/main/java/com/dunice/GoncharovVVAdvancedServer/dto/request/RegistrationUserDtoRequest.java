@@ -10,7 +10,6 @@ import lombok.Data;
 @Data
 @Valid
 public class RegistrationUserDtoRequest {
-
     private String avatar;
 
     @Email(message = ValidationConstants.USER_EMAIL_NOT_VALID)
@@ -27,5 +26,4 @@ public class RegistrationUserDtoRequest {
 
     @Size(min = 3, max = 100, message = ValidationConstants.ROLE_SIZE_NOT_VALID)
     private String role;
-
 }

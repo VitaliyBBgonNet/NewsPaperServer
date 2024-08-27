@@ -28,7 +28,6 @@ public class TokenSecurity {
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
         SecretKey key = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS512.getJcaName());
 
@@ -56,7 +55,6 @@ public class TokenSecurity {
     }
 
     private Claims getClaimsToken(String token) {
-
         byte[] keyByte = Base64.getDecoder().decode(secretKey);
         SecretKey key = new SecretKeySpec(keyByte, SignatureAlgorithm.HS512.getJcaName());
 
@@ -66,5 +64,4 @@ public class TokenSecurity {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
 }

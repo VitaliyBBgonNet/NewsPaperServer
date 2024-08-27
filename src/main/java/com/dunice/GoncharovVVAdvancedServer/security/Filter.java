@@ -6,11 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
+@Component
 @RequiredArgsConstructor
 public class Filter extends OncePerRequestFilter {
 
@@ -28,10 +29,8 @@ public class Filter extends OncePerRequestFilter {
             if (tokenSecurity.isTokenValid(token)) {
                 String id = tokenSecurity.getIdFromToken(token);
                 CustomUserDetails currentUser = customUserDetailsService.loadUserByUsername(id);
-                UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(currentUser,null, currentUser.getAuthorities());
+                UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(user);
-            } else {
-
             }
         }
     }

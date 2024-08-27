@@ -1,5 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.configurations;
 
+import com.dunice.GoncharovVVAdvancedServer.security.CustomAuthenticationEntryPoint;
 import com.dunice.GoncharovVVAdvancedServer.security.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
     private final Filter filter;
 
     @Bean
@@ -23,6 +26,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll()
+                ).exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
                 ).addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
