@@ -1,11 +1,15 @@
 package com.dunice.GoncharovVVAdvancedServer.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -37,12 +41,30 @@ public class TokenSecurity {
                 .compact();
     }
 
-    public Boolean isTokenValid(String token){
-       return true;
+    public Boolean isTokenValid(String token) {
+        try {
+            Claims claims = getClaimsToken(token);
+            return !claims.getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public String getIdFromToken(String token){
-        return "";
+    public String getIdFromToken(String token) {
+        Claims claims = getClaimsToken(token);
+        return claims.getSubject();
+    }
+
+    private Claims getClaimsToken(String token) {
+
+        byte[] keyByte = Base64.getDecoder().decode(secretKey);
+        SecretKey key = new SecretKeySpec(keyByte, SignatureAlgorithm.HS512.getJcaName());
+
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
 }

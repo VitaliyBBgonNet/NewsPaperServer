@@ -30,6 +30,8 @@ public class Filter extends OncePerRequestFilter {
                 CustomUserDetails currentUser = customUserDetailsService.loadUserByUsername(id);
                 UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(currentUser,null, currentUser.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(user);
+            } else {
+
             }
         }
     }
