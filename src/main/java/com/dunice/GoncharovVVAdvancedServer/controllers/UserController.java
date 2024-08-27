@@ -1,5 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.controllers;
 
+import com.dunice.GoncharovVVAdvancedServer.dto.request.AuthUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
@@ -23,5 +24,13 @@ public class UserController {
             @RequestBody
             @Valid RegistrationUserRequest registration) {
         return ResponseEntity.ok(userService.registrationUser(registration));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<CustomSuccessResponse<LoginUserResponse>> authorizationUser(
+            @RequestBody
+            @Valid AuthUserRequest authUserRequest) {
+
+        return ResponseEntity.ok(userService.authorizationUser(authUserRequest));
     }
 }

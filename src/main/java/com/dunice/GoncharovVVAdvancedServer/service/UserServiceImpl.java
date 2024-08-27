@@ -2,6 +2,7 @@ package com.dunice.GoncharovVVAdvancedServer.service;
 
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
+import com.dunice.GoncharovVVAdvancedServer.dto.request.AuthUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
@@ -41,6 +42,12 @@ public class UserServiceImpl implements UserService {
         LoginUserResponse responseLogin = userMapper.toLoginDto(saveEntity);
         responseLogin.setToken(jwtToken.generateToken(saveEntity.getId()));
 
+        return new CustomSuccessResponse<>(responseLogin);
+    }
+
+    public CustomSuccessResponse<LoginUserResponse> authorizationUser(AuthUserRequest authUserRequest){
+
+        LoginUserResponse responseLogin = null;
         return new CustomSuccessResponse<>(responseLogin);
     }
 }
