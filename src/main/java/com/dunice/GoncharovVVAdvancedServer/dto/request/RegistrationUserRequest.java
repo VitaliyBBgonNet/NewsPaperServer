@@ -8,8 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-@Valid
-public class RegistrationUserDtoRequest {
+public class RegistrationUserRequest {
     private String avatar;
 
     @Email(message = ValidationConstants.USER_EMAIL_NOT_VALID)

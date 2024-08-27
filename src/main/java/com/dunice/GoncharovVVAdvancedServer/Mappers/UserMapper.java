@@ -1,7 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.Mappers;
 
-import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserDtoRequest;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserDtoResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import org.mapstruct.Mapper;
@@ -15,11 +15,9 @@ public interface UserMapper {
     PublicUserResponse toUserDto(UsersEntity user);
 
     @Mapping(target = "id", ignore = true)
-    UsersEntity toEntityRegistrationUser(RegistrationUserDtoRequest registrationDto);
+    UsersEntity toEntityRegistrationUser(RegistrationUserRequest registrationDto);
 
     @Mapping(target = "token", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    LoginUserDtoResponse toLoginDto(RegistrationUserDtoRequest registrationDto);
+    LoginUserResponse toLoginDto(UsersEntity usersEntity);
 
-    List<PublicUserResponse> toUserDtoList(List<UsersEntity> usersEntities);
 }

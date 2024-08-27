@@ -1,7 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.controllers;
 
-import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserDtoRequest;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserDtoResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.service.UserService;
 import jakarta.validation.Valid;
@@ -19,9 +19,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<CustomSuccessResponse<LoginUserDtoResponse>> registrationUser(
+    public ResponseEntity<CustomSuccessResponse<LoginUserResponse>> registrationUser(
             @RequestBody
-            @Valid RegistrationUserDtoRequest registration) {
+            @Valid RegistrationUserRequest registration) {
         return ResponseEntity.ok(userService.registrationUser(registration));
     }
 }

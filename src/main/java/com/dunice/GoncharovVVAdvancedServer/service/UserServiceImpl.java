@@ -2,8 +2,8 @@ package com.dunice.GoncharovVVAdvancedServer.service;
 
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
-import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserDtoRequest;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserDtoResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
 
     private final TokenSecurity jwtToken;
 
-    public CustomSuccessResponse<LoginUserDtoResponse> registrationUser(
-        RegistrationUserDtoRequest requestForRegistration) throws CustomException {
+    public CustomSuccessResponse<LoginUserResponse> registrationUser(
+        RegistrationUserRequest requestForRegistration) throws CustomException {
 
         Optional<UsersEntity> existingUser = userRepository.findByEmail(requestForRegistration.getEmail());
 
@@ -39,9 +39,7 @@ public class UserServiceImpl implements UserService {
         UsersEntity saveEntity = userMapper.toEntityRegistrationUser(requestForRegistration);
         saveEntity.setPassword(encryptedPassword);
         userRepository.save(saveEntity);
-
-        LoginUserDtoResponse responseLogin = userMapper.toLoginDto(requestForRegistration);
-        responseLogin.setId(String.valueOf(saveEntity.getId()));
+        LoginUserResponse responseLogin = userMapper.toLoginDto(saveEntity);
         responseLogin.setToken(jwtToken.generateToken(saveEntity.getId()));
 
         return new CustomSuccessResponse<>(responseLogin);

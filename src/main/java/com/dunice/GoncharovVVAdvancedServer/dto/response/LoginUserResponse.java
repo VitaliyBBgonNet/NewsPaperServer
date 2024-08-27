@@ -1,11 +1,9 @@
 package com.dunice.GoncharovVVAdvancedServer.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-public class LoginUserDtoResponse {
+public class LoginUserResponse {
     private String avatar;
 
     private String email;
