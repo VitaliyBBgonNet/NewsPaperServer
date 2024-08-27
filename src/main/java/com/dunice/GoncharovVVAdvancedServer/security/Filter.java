@@ -1,5 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.security;
 
+import com.dunice.GoncharovVVAdvancedServer.constants.StringConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +24,8 @@ public class Filter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer")) {
+        String bearerToken = request.getHeader(StringConstants.AUTHORIZATION);
+        if (bearerToken != null && bearerToken.startsWith(StringConstants.BEARER)) {
             String token = bearerToken.substring(7);
             if (tokenSecurity.isTokenValid(token)) {
                 String id = tokenSecurity.getIdFromToken(token);

@@ -1,4 +1,4 @@
-package com.dunice.GoncharovVVAdvancedServer.security;
+package com.dunice.GoncharovVVAdvancedServer.exeception;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +13,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Authentication token was either missing or invalid.");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

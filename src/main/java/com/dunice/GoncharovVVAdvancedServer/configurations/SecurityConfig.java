@@ -1,6 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.configurations;
 
-import com.dunice.GoncharovVVAdvancedServer.security.CustomAuthenticationEntryPoint;
+import com.dunice.GoncharovVVAdvancedServer.exeception.CustomAuthenticationEntryPoint;
 import com.dunice.GoncharovVVAdvancedServer.security.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -29,11 +29,10 @@ public class UserServiceImpl implements UserService {
     public CustomSuccessResponse<LoginUserResponse> registrationUser(
         RegistrationUserRequest requestForRegistration) throws CustomException {
 
-        Optional<UsersEntity> existingUser = userRepository.findByEmail(requestForRegistration.getEmail());
-
-        if (existingUser.isPresent()) {
-            throw new CustomException(ErrorCodes.USER_ALREADY_EXISTS);
-        }
+        userRepository.findByEmail(requestForRegistration.getEmail())
+                .ifPresent(user -> {
+                    throw new CustomException(ErrorCodes.USER_ALREADY_EXISTS);
+                });
 
         String encryptedPassword = passwordEncoder.encode(requestForRegistration.getPassword());
         UsersEntity saveEntity = userMapper.toEntityRegistrationUser(requestForRegistration);
@@ -44,5 +43,4 @@ public class UserServiceImpl implements UserService {
 
         return new CustomSuccessResponse<>(responseLogin);
     }
-
 }

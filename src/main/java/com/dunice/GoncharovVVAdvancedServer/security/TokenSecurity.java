@@ -1,5 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.security;
 
+import com.dunice.GoncharovVVAdvancedServer.constants.StringConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,21 +24,16 @@ public class TokenSecurity {
     private Long expirationTime;
 
     public String generateToken(UUID id) {
-        Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, id.toString());
-    }
-
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
         SecretKey key = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS512.getJcaName());
 
-        return "Bearer " + Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
+        return StringConstants.BEARER + Jwts.builder()
+                .setSubject(id.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
+
     }
 
     public Boolean isTokenValid(String token) {
