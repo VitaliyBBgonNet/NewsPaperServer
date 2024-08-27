@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public CustomSuccessResponse<LoginUserResponse> authorizationUser(AuthUserRequest authUserRequest){
-
         LoginUserResponse responseLogin = null;
         return new CustomSuccessResponse<>(responseLogin);
     }
