@@ -8,7 +8,7 @@ import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
-import com.dunice.GoncharovVVAdvancedServer.repository.UserRepository;
+import com.dunice.GoncharovVVAdvancedServer.repository.AuthRepository;
 import com.dunice.GoncharovVVAdvancedServer.security.TokenSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
+    private final AuthRepository authRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     public CustomSuccessResponse<LoginUserResponse> registrationUser(
         RegistrationUserRequest requestForRegistration) throws CustomException {
 
-        userRepository.findByEmail(requestForRegistration.getEmail())
+        authRepository.findByEmail(requestForRegistration.getEmail())
                 .ifPresent(user -> {
                     throw new CustomException(ErrorCodes.USER_ALREADY_EXISTS);
                 });
@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
         String encryptedPassword = passwordEncoder.encode(requestForRegistration.getPassword());
         UsersEntity saveEntity = userMapper.toEntityRegistrationUser(requestForRegistration);
         saveEntity.setPassword(encryptedPassword);
-        userRepository.save(saveEntity);
+        authRepository.save(saveEntity);
         LoginUserResponse responseLogin = userMapper.toLoginDto(saveEntity);
         responseLogin.setToken(jwtToken.generateToken(saveEntity.getId()));
 
@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
     public CustomSuccessResponse<LoginUserResponse> authorizationUser(AuthUserRequest authUserRequest) {
 
-        UsersEntity getEntityUser = userRepository.findByEmail(authUserRequest.getEmail())
+        UsersEntity getEntityUser = authRepository.findByEmail(authUserRequest.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(authUserRequest.getPassword(), getEntityUser.getPassword())) {
