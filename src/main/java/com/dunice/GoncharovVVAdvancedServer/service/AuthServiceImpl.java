@@ -13,11 +13,10 @@ import com.dunice.GoncharovVVAdvancedServer.security.TokenSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserServiceImpl implements UserService {
+public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
 
@@ -45,8 +44,18 @@ public class UserServiceImpl implements UserService {
         return new CustomSuccessResponse<>(responseLogin);
     }
 
-    public CustomSuccessResponse<LoginUserResponse> authorizationUser(AuthUserRequest authUserRequest){
-        LoginUserResponse responseLogin = null;
-        return new CustomSuccessResponse<>(responseLogin);
+    public CustomSuccessResponse<LoginUserResponse> authorizationUser(AuthUserRequest authUserRequest) {
+
+        UsersEntity getEntityUser = userRepository.findByEmail(authUserRequest.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(authUserRequest.getPassword(), getEntityUser.getPassword())) {
+            throw new CustomException(ErrorCodes.USER_PASSWORD_NOT_VALID);
+        }
+
+        LoginUserResponse loginUserResponse = userMapper.toLoginDto(getEntityUser);
+        loginUserResponse.setToken(jwtToken.generateToken(getEntityUser.getId()));
+
+        return new CustomSuccessResponse<>(loginUserResponse);
     }
 }

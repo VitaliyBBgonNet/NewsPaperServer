@@ -4,7 +4,7 @@ import com.dunice.GoncharovVVAdvancedServer.dto.request.AuthUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
-import com.dunice.GoncharovVVAdvancedServer.service.UserService;
+import com.dunice.GoncharovVVAdvancedServer.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/auth")
 @RequiredArgsConstructor
 @Validated
-public class UserController {
+public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<CustomSuccessResponse<LoginUserResponse>> registrationUser(
             @RequestBody
             @Valid RegistrationUserRequest registration) {
-        return ResponseEntity.ok(userService.registrationUser(registration));
+        return ResponseEntity.ok(authService.registrationUser(registration));
     }
 
     @PostMapping("/login")
@@ -31,6 +31,6 @@ public class UserController {
             @RequestBody
             @Valid AuthUserRequest authUserRequest) {
 
-        return ResponseEntity.ok(userService.authorizationUser(authUserRequest));
+        return ResponseEntity.ok(authService.authorizationUser(authUserRequest));
     }
 }
