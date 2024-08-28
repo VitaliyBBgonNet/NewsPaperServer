@@ -24,7 +24,7 @@ public class CustomErrorAdvice {
     public ResponseEntity<CustomSuccessResponse> handlerMethodArgumentNotValidException(
             MethodArgumentNotValidException exception) {
 
-        BindingResult bindingResult = exception.getBindingResult();
+        var bindingResult = exception.getBindingResult();
 
         List<Integer> codes = bindingResult.getFieldErrors()
                 .stream()
@@ -32,6 +32,7 @@ public class CustomErrorAdvice {
                 .map(ErrorCodes::getCodeByMessage)
                 .toList();
 
-        return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0)), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0), codes), HttpStatus.BAD_REQUEST);
+
     }
 }

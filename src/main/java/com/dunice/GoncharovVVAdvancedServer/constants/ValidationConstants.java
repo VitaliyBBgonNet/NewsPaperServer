@@ -46,4 +46,5 @@ public interface ValidationConstants {
     String TASKS_PER_PAGE_GREATER_OR_EQUAL_1 = "Tasks per page must be greater or equal to 1";
     String TASKS_PER_PAGE_LESS_OR_EQUAL_100 = "Tasks per page must be less or equal to 100";
     String HTTP_MESSAGE_NOT_READABLE_EXCEPTION = "HTTP request is not valid";
+    String USER_ROLE_NOT_NULL = "user role mustn't be null";
 }
