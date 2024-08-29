@@ -32,6 +32,7 @@ public class CustomErrorAdvice {
                 .map(ErrorCodes::getCodeByMessage)
                 .toList();
 
-        return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0)), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0), codes), HttpStatus.BAD_REQUEST);
+
     }
 }
