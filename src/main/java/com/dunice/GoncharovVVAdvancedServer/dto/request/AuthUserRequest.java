@@ -14,6 +14,6 @@ public class AuthUserRequest {
     private String email;
 
     @Size(min = 3, max = 25, message = ValidationConstants.PASSWORD_NOT_VALID)
-    @NotBlank(message = ValidationConstants.USER_PASSWORD_NULL)
+    @NotBlank(message = ValidationConstants.PASSWORD_NOT_VALID)
     private String password;
 }

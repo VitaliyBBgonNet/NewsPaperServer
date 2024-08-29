@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
