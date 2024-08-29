@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PublicUserResponse {
+public class PublicUserViewResponse {
     private String avatar;
 
     private String email;

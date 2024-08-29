@@ -30,7 +30,8 @@ public class Filter extends OncePerRequestFilter {
             if (tokenSecurity.isTokenValid(token)) {
                 String id = tokenSecurity.getIdFromToken(token);
                 CustomUserDetails currentUser = customUserDetailsService.loadUserByUsername(id);
-                UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
+                UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(
+                        currentUser, null, currentUser.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(user);
             }
         }
