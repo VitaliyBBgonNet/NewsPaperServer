@@ -1,5 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.controllers;
 
+import com.dunice.GoncharovVVAdvancedServer.constants.StringConstants;
 import com.dunice.GoncharovVVAdvancedServer.constants.ValidationConstants;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
@@ -33,7 +34,7 @@ public class UserController {
     public ResponseEntity<CustomSuccessResponse<PublicUserResponse>> getUserById(
             @PathVariable
             @Size(min = 36, max = 36, message = ValidationConstants.MAX_UPLOAD_SIZE_EXCEEDED)
-            @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            @Pattern(regexp = StringConstants.PATTERN_FORMAT_UUID,
                     message = ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION) String id) {
         return ResponseEntity.ok(userService.getUserById(UUID.fromString(id)));
     }
