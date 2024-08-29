@@ -34,7 +34,7 @@ public enum ErrorCodes {
     REQUEST_IS_NOT_MULTIPART(22, "Current request is not a multipart request"),
     MAX_UPLOAD_SIZE_EXCEEDED(23, "Maximum upload size exceeded"),
     USER_AVATAR_NOT_NULL(24, "User avatar mustn't be null"),
-    PASSWORD_NOT_VALID(25, "password not valid"),
+    PASSWORD_NOT_VALID(25, "Password is not valid"),
     PASSWORD_NOT_NULL(26, "user password mustn't be null"),
     NEWS_NOT_FOUND(27, "news not found"),
     ID_MUST_BE_POSITIVE(29, ValidationConstants.ID_MUST_BE_POSITIVE),
