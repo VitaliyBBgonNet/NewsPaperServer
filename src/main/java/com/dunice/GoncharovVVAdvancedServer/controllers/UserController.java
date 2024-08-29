@@ -1,8 +1,11 @@
 package com.dunice.GoncharovVVAdvancedServer.controllers;
 
-import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserViewResponse;
+import com.dunice.GoncharovVVAdvancedServer.constants.ValidationConstants;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.service.UserService;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,18 +25,21 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<CustomSuccessResponse<List<PublicUserViewResponse>>> getAllUsers() {
+    public ResponseEntity<CustomSuccessResponse<List<PublicUserResponse>>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomSuccessResponse<PublicUserViewResponse>> getUserById(
-            @PathVariable UUID id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ResponseEntity<CustomSuccessResponse<PublicUserResponse>> getUserById(
+            @PathVariable
+            @Size(min = 36, max = 36, message = ValidationConstants.MAX_UPLOAD_SIZE_EXCEEDED)
+            @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                    message = ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION) String id) {
+        return ResponseEntity.ok(userService.getUserById(UUID.fromString(id)));
     }
 
     @GetMapping("/info")
-    public ResponseEntity<CustomSuccessResponse<PublicUserViewResponse>> getUserInfo() {
+    public ResponseEntity<CustomSuccessResponse<PublicUserResponse>> getUserInfo() {
         return ResponseEntity.ok(userService.getUserInfo());
     }
 }

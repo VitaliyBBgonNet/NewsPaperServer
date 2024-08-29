@@ -2,7 +2,7 @@ package com.dunice.GoncharovVVAdvancedServer.service;
 
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserViewResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
@@ -24,24 +24,24 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public CustomSuccessResponse<List<PublicUserViewResponse>> getAllUsers() {
+    public CustomSuccessResponse<List<PublicUserResponse>> getAllUsers() {
         return new CustomSuccessResponse<>(userMapper.toPublicViewListDto(userRepository.findAll()));
     }
 
     @Override
-    public CustomSuccessResponse<PublicUserViewResponse> getUserById(UUID id) {
+    public CustomSuccessResponse<PublicUserResponse> getUserById(UUID id) {
 
         UsersEntity getEntityUser = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
-        return new CustomSuccessResponse<>(userMapper.toPublicViewDto(getEntityUser));
+        return new CustomSuccessResponse<>(userMapper.toPublicDto(getEntityUser));
     }
 
     @Override
-    public CustomSuccessResponse<PublicUserViewResponse> getUserInfo() {
+    public CustomSuccessResponse<PublicUserResponse> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userDetailsId = ((CustomUserDetails) authentication.getPrincipal()).getUsername();
-        return new CustomSuccessResponse<>(userMapper.toPublicViewDto(
+        return new CustomSuccessResponse<>(userMapper.toPublicDto(
                 userRepository.findAllById(UUID.fromString(userDetailsId))));
     }
 }
