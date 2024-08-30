@@ -26,9 +26,9 @@ public interface UserMapper {
 
     PublicUserResponse toPublicDto(UsersEntity usersEntity);
 
-    UsersEntity toUserFromPut(PutUserRequest putUserRequest);
-
     PutUserResponse toPutUserResponseFromUserEntity(UsersEntity usersEntity);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "password", ignore = true)
     void updateUserFromPut(PutUserRequest putUserRequest, @MappingTarget UsersEntity entity);
 }

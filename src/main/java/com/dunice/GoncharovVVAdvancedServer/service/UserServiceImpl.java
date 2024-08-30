@@ -53,6 +53,12 @@ public class UserServiceImpl implements UserService {
         UsersEntity getEntityUser = userRepository.findById(getUserIdByToken())
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
+        userRepository
+                .findByEmailAndId(putUserRequest.getEmail(), getUserIdByToken())
+                .ifPresent(user -> {
+                    throw new CustomException(ErrorCodes.USER_WITH_THIS_EMAIL_ALREADY_EXIST);
+                });
+
         userMapper.updateUserFromPut(putUserRequest, getEntityUser);
         userRepository.save(getEntityUser);
 
