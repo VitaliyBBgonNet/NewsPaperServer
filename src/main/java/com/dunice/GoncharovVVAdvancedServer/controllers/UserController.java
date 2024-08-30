@@ -2,9 +2,12 @@ package com.dunice.GoncharovVVAdvancedServer.controllers;
 
 import com.dunice.GoncharovVVAdvancedServer.constants.StringConstants;
 import com.dunice.GoncharovVVAdvancedServer.constants.ValidationConstants;
+import com.dunice.GoncharovVVAdvancedServer.dto.request.PutUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.PutUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.service.UserService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -42,5 +47,12 @@ public class UserController {
     @GetMapping("/info")
     public ResponseEntity<CustomSuccessResponse<PublicUserResponse>> getUserInfo() {
         return ResponseEntity.ok(userService.getUserInfo());
+    }
+
+    @PutMapping
+    public ResponseEntity<CustomSuccessResponse<PutUserResponse>> replaceUser(
+            @RequestBody
+            @Valid PutUserRequest putUserRequest) {
+        return ResponseEntity.ok(userService.replaceUser(putUserRequest));
     }
 }

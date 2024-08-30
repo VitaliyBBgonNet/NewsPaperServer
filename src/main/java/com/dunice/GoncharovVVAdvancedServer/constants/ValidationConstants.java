@@ -25,7 +25,7 @@ public interface ValidationConstants {
     String NEWS_TITLE_SIZE = "News title size is not valid";
     String USER_ROLE_NOT_VALID = "User role should be between 3 and 25 characters";
     String USER_PASSWORD_NULL = "User password must be null";
-    String USER_EMAIL_NOT_NULL = "User email mustn't be null";
+    String USER_EMAIL_NOT_NULL = "user email mustn't be null";
     String ROLE_SIZE_NOT_VALID = "Role size is not valid";
     String EMAIL_SIZE_NOT_VALID = "Email size is not valid";
     String TOKEN_NOT_PROVIDED = "JWT token not provided";
