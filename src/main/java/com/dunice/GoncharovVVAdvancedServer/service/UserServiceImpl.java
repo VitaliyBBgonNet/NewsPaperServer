@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
         userRepository
-                .findByEmailAndId(putUserRequest.getEmail(), getUserIdByToken())
+                .findByEmailAndIdNot(putUserRequest.getEmail(), getEntityUser.getId())
                 .ifPresent(user -> {
                     throw new CustomException(ErrorCodes.USER_WITH_THIS_EMAIL_ALREADY_EXIST);
                 });
