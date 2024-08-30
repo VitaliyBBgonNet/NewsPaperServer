@@ -43,24 +43,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CustomSuccessResponse<PublicUserResponse> getUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userDetailsId = ((CustomUserDetails) authentication.getPrincipal()).getUsername();
         return new CustomSuccessResponse<>(userMapper.toPublicDto(
-                userRepository.findAllById(UUID.fromString(userDetailsId))));
+                userRepository.findAllById(getUserIdByToken())));
     }
 
     @Override
     public CustomSuccessResponse<PutUserResponse> replaceUser(PutUserRequest putUserRequest) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UsersEntity getEntityUser = userRepository.findById(UUID.fromString(
-                ((CustomUserDetails) authentication.getPrincipal()).getUsername()))
+        UsersEntity getEntityUser = userRepository.findById(getUserIdByToken())
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
         userMapper.updateUserFromPut(putUserRequest, getEntityUser);
         userRepository.save(getEntityUser);
 
         return new CustomSuccessResponse<>(userMapper.toPutUserResponseFromUserEntity(getEntityUser));
+    }
+
+    private UUID getUserIdByToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return UUID.fromString(((CustomUserDetails) authentication.getPrincipal()).getUsername());
     }
 }
