@@ -1,5 +1,8 @@
 package com.dunice.GoncharovVVAdvancedServer.exeception;
 
+import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +16,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonResponse = mapper.writeValueAsString(new BaseSuccessResponse(ErrorCodes.UNAUTHORISED.getCode()));
+        response.getWriter().write(jsonResponse);
     }
 }

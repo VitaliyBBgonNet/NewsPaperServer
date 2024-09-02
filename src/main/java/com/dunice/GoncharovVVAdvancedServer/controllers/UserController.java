@@ -3,6 +3,7 @@ package com.dunice.GoncharovVVAdvancedServer.controllers;
 import com.dunice.GoncharovVVAdvancedServer.constants.StringConstants;
 import com.dunice.GoncharovVVAdvancedServer.constants.ValidationConstants;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.PutUserRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PutUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
@@ -13,6 +14,7 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,5 +56,10 @@ public class UserController {
             @RequestBody
             @Valid PutUserRequest putUserRequest) {
         return ResponseEntity.ok(userService.replaceUser(putUserRequest));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<BaseSuccessResponse> deleteUserByToken() {
+        return ResponseEntity.ok(userService.deleteUser());
     }
 }
