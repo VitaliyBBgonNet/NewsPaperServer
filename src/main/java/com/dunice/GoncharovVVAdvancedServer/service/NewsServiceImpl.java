@@ -30,15 +30,17 @@ public class NewsServiceImpl implements  NewsService {
     public CreateNewsSuccessResponse creteNews(NewsRequest newsRequest) {
 
         UsersEntity user = userRepository.findById(getUserByToken())
-                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));//Проверили наличие пользователя
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
-        NewsEntity newsEntity = newsMapper.DtoNewToEntityNews(newsRequest);// Замапили newsResquest на сушность перед сохранением
+        NewsEntity newsEntity = newsMapper.DtoNewToEntityNews(newsRequest);
 
-        newsEntity.setUser(user); // Закидываем в сушность пользователя полученного по id
+        newsEntity.setUser(user);
 
-        newsRepository.save(newsEntity);// Сохраняем полученную сущность
+        newsRepository.save(newsEntity);
 
-        return new CreateNewsSuccessResponse(newsEntity.getIdNews());// Возвращаем DTO
+        System.out.println(newsEntity.getIdNews());
+
+        return new CreateNewsSuccessResponse(newsEntity.getIdNews());
     }
 
     private UUID getUserByToken() {

@@ -3,6 +3,7 @@ package com.dunice.GoncharovVVAdvancedServer.controllers;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CreateNewsSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.service.NewsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +22,8 @@ public class NewController {
 
     @PostMapping
     public ResponseEntity<CreateNewsSuccessResponse> createNewsForThisUser(
-            @RequestBody NewsRequest newsRequest) {
+            @RequestBody
+            @Valid NewsRequest newsRequest) {
         return ResponseEntity.ok(newsService.creteNews(newsRequest));
     }
 }
