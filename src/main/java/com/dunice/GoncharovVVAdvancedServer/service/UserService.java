@@ -1,6 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.service;
 
 import com.dunice.GoncharovVVAdvancedServer.dto.request.PutUserRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PutUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
@@ -15,4 +16,6 @@ public interface UserService {
     CustomSuccessResponse<PublicUserResponse> getUserInfo();
 
     CustomSuccessResponse<PutUserResponse> replaceUser(PutUserRequest putUserRequest);
+
+    BaseSuccessResponse deleteUser();
 }

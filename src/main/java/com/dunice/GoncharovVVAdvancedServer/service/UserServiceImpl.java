@@ -3,6 +3,7 @@ package com.dunice.GoncharovVVAdvancedServer.service;
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.PutUserRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PutUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
@@ -20,7 +21,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService{
 
     private final UserMapper userMapper;
 
@@ -63,6 +64,20 @@ public class UserServiceImpl implements UserService {
         userRepository.save(getEntityUser);
 
         return new CustomSuccessResponse<>(userMapper.toPutUserResponseFromUserEntity(getEntityUser));
+    }
+
+    @Override
+    @Transactional
+    public BaseSuccessResponse deleteUser() {
+        UUID idFromToken = getUserIdByToken();
+
+        userRepository.findById(idFromToken)
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+
+
+        userRepository.deleteById(idFromToken);
+
+        return new BaseSuccessResponse();
     }
 
     private UUID getUserIdByToken() {
