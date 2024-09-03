@@ -15,6 +15,7 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
+    @Mapping(target = "news", ignore = true)
     @Mapping(target = "id", ignore = true)
     UsersEntity toEntityRegistrationUser(RegistrationUserRequest registrationDto);
 
@@ -28,6 +29,7 @@ public interface UserMapper {
 
     PutUserResponse toPutUserResponseFromUserEntity(UsersEntity usersEntity);
 
+    @Mapping(target = "news", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
     void updateUserFromPut(PutUserRequest putUserRequest, @MappingTarget UsersEntity entity);

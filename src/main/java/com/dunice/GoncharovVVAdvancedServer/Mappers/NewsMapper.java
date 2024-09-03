@@ -11,6 +11,6 @@ import org.mapstruct.MappingConstants;
 public interface NewsMapper {
 
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "idNews", ignore = true)
+    @Mapping(target = "id", ignore = true)
     NewsEntity DtoNewToEntityNews(NewsRequest newsRequest);
 }

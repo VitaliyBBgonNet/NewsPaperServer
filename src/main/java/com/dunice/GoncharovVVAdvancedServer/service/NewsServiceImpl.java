@@ -38,9 +38,9 @@ public class NewsServiceImpl implements  NewsService {
 
         newsRepository.save(newsEntity);
 
-        System.out.println(newsEntity.getIdNews());
+        System.out.println(newsEntity.getId());
 
-        return new CreateNewsSuccessResponse(newsEntity.getIdNews());
+        return new CreateNewsSuccessResponse(newsEntity.getId());
     }
 
     private UUID getUserByToken() {
