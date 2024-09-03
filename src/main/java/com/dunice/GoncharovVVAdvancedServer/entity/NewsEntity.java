@@ -6,25 +6,34 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-import java.util.List;
+import lombok.NoArgsConstructor;
+import java.util.Set;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "news")
 public class NewsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idNews;
+    private Integer id;
 
     private String title;
 
     private String description;
 
-    private List<String> tags;
+    @ManyToMany
+    @JoinTable(
+            name = "news_tags",
+            joinColumns = @JoinColumn(name = "news_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<TagsEntity> tags;
 
     private String image;
 
