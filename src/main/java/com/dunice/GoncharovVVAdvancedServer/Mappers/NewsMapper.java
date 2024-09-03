@@ -10,6 +10,7 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface NewsMapper {
 
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "idNews", ignore = true)
     NewsEntity DtoNewToEntityNews(NewsRequest newsRequest);
 }
