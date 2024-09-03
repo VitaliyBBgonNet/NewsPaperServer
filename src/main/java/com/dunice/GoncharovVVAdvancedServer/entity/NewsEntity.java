@@ -40,5 +40,4 @@ public class NewsEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UsersEntity user;
-
 }

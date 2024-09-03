@@ -2,7 +2,6 @@ package com.dunice.GoncharovVVAdvancedServer.Mappers;
 
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
 import com.dunice.GoncharovVVAdvancedServer.entity.NewsEntity;
-import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
