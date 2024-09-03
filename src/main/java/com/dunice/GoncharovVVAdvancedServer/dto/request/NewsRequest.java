@@ -20,7 +20,7 @@ public class NewsRequest {
     private String image;
 
     @NotEmpty(message = ValidationConstants.TAGS_NOT_VALID)// Смотреть сюда
-    private Set<@NotBlank(message = ValidationConstants.TAGS_NOT_VALID) TagsEntity> tags;
+    private Set<@NotBlank(message = ValidationConstants.TAGS_NOT_VALID) String> tags;
 
     @Size(min = 3, max = 160, message = ValidationConstants.NEWS_DESCRIPTION_SIZE_NOT_VALID)
     private String title;
