@@ -14,12 +14,12 @@ public class TagServiceImpl implements TagService {
     private final TagsRepository tagsRepository;
 
     @Override
-    public Set<TagsEntity> myMapperForTagsNews(Set<String> setForNews) {
+    public Set<TagsEntity> createSetTagsEntityAndSaveNoExistentTags(Set<String> setForNews) {
 
         Set<TagsEntity> setTitleFromRepository = tagsRepository.findByTitleIn(setForNews);
 
         setForNews.removeAll(setTitleFromRepository.stream()
-                .map(title -> title.getTitle())
+                .map(TagsEntity::getTitle)
                 .collect(Collectors.toSet()));
 
         Set<TagsEntity> tagsEntitySetForSave = setForNews.stream()

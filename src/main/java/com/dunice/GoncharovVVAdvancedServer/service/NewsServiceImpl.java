@@ -28,7 +28,7 @@ public class NewsServiceImpl implements NewsService {
     public CreateNewsSuccessResponse creteNews(NewsRequest newsRequest) {
         NewsEntity newsEntity = newsMapper.dtoNewToEntityNews(newsRequest);
 
-        newsEntity.setTags(tagService.myMapperForTagsNews(newsRequest.getTags()));
+        newsEntity.setTags(tagService.createSetTagsEntityAndSaveNoExistentTags(newsRequest.getTags()));
         newsEntity.setAuthor(userService.findUserEntityById(getUserIdByToken()));
         newsRepository.save(newsEntity);
 
