@@ -5,10 +5,14 @@ import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessRespons
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PutUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
+
+    UsersEntity findUserEntityById(UUID id);
+
     CustomSuccessResponse<List<PublicUserResponse>> getAllUsers();
 
     CustomSuccessResponse<PublicUserResponse> getUserById(UUID id);
