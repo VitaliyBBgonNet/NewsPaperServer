@@ -17,7 +17,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 @Table(name = "users")
 public class UsersEntity {
 
@@ -36,7 +35,7 @@ public class UsersEntity {
 
     private String avatar;
 
-    @OneToMany(mappedBy = "user",
+    @OneToMany(mappedBy = "author",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Set<NewsEntity> news;

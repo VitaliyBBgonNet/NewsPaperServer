@@ -5,13 +5,13 @@ import lombok.Getter;
 @Getter
 public class CreateNewsSuccessResponse {
 
-    private Integer id;
+    private Long id;
 
     private Integer statusCode = 0;
 
     private Boolean success = true;
 
-    public CreateNewsSuccessResponse(Integer id) {
+    public CreateNewsSuccessResponse(Long id) {
         this.id = id;
     }
 }

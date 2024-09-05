@@ -10,19 +10,20 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
-@NoArgsConstructor
 @Table(name = "news")
 public class NewsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String title;
 
@@ -38,6 +39,6 @@ public class NewsEntity {
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UsersEntity user;
+    @JoinColumn(name = "author")
+    private UsersEntity author;
 }

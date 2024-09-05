@@ -10,7 +10,7 @@ import org.mapstruct.MappingConstants;
 public interface NewsMapper {
 
     @Mapping(target = "tags", ignore = true)
-    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "author", ignore = true)
     @Mapping(target = "id", ignore = true)
-    NewsEntity DtoNewToEntityNews(NewsRequest newsRequest);
+    NewsEntity dtoNewToEntityNews(NewsRequest newsRequest);
 }

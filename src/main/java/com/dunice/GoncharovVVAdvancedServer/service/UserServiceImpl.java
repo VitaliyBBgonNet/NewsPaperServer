@@ -28,6 +28,12 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Override
+    public UsersEntity findUserEntityById(UUID id) {
+        return userRepository.findById(getUserIdByToken())
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+    }
+
+    @Override
     public CustomSuccessResponse<List<PublicUserResponse>> getAllUsers() {
         return new CustomSuccessResponse<>(userMapper.toPublicViewListDto(userRepository.findAll()));
     }
