@@ -15,9 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -35,7 +35,7 @@ public class NewsServiceImpl implements NewsService {
     public CreateNewsSuccessResponse creteNews(NewsRequest newsRequest) {
 
         NewsEntity newsEntity = newsMapper.DtoNewToEntityNews(newsRequest);
-        newsEntity.setTags(checkTagsAndSet(newsRequest));
+        newsEntity.setTags(myMapperForTagsNews(newsRequest.getTags()));
 
         newsEntity.setUser(userRepository.findById(getUserByToken())
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND)));
@@ -49,18 +49,24 @@ public class NewsServiceImpl implements NewsService {
         return UUID.fromString(((CustomUserDetails) authentication.getPrincipal()).getUsername());
     }
 
-    private Set<TagsEntity> checkTagsAndSet(NewsRequest newsRequest) {
-        Set<TagsEntity> tagsEntities = new HashSet<>();
+    private Set<TagsEntity> myMapperForTagsNews(Set<String> setForNews) {
 
-        for (String tagTitle : newsRequest.getTags()) {
-            TagsEntity tagEntity = tagsRepository.findByTitle(tagTitle)
-                    .orElseGet(() -> {
-                        TagsEntity newTag = new TagsEntity();
-                        newTag.setTitle(tagTitle);
-                        return tagsRepository.save(newTag);
-                    });
-            tagsEntities.add(tagEntity);
-        }
-        return tagsEntities;
+        Set<TagsEntity> setTitleFromRepository = tagsRepository.findByTitleIn(setForNews);
+
+        setForNews.removeAll(setTitleFromRepository.stream()
+                .map(title -> title.getTitle())
+                .collect(Collectors.toSet()));
+
+        Set<TagsEntity> tagsEntitySetForSave = setForNews.stream()
+                .map(tag -> {
+                    TagsEntity newTag = new TagsEntity();
+                    newTag.setTitle(tag);
+                    return newTag;
+                }).collect(Collectors.toSet());
+
+        tagsRepository.saveAll(tagsEntitySetForSave);
+        setTitleFromRepository.addAll(tagsEntitySetForSave);
+
+        return setTitleFromRepository;
     }
 }
