@@ -26,6 +26,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("v1/auth/**").permitAll()
+                        .requestMatchers("v1/news/**").permitAll()
                         .anyRequest().authenticated()
                 ).exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
