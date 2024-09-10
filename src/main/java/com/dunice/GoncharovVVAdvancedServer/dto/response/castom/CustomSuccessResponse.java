@@ -1,6 +1,5 @@
 package com.dunice.GoncharovVVAdvancedServer.dto.response.castom;
 
-import com.dunice.GoncharovVVAdvancedServer.dto.response.GetNewsOutResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

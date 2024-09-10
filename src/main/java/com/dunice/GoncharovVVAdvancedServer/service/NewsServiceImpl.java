@@ -49,9 +49,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public CustomSuccessResponse<PageableResponse> getNewsUserById(String id, Integer page, Integer perPage) {
+    public CustomSuccessResponse<PageableResponse<List<GetNewsOutResponse>>> getNewsUserById(String id, Integer page, Integer perPage) {
 
-        PageRequest pageRequest = PageRequest.of(page, perPage);
+        PageRequest pageRequest = PageRequest.of(page - 1, perPage);
         Page<NewsEntity> newsEntityListPagination = newsRepository.findByAuthorId(UUID.fromString(id), pageRequest);
 
         List<GetNewsOutResponse> getNewsOutResponseList = newsEntityListPagination.getContent()
@@ -75,11 +75,38 @@ public class NewsServiceImpl implements NewsService {
                 )
                 .toList();
 
-        PageableResponse<GetNewsOutResponse> response = new PageableResponse<>();
-        response.setNumberOfElement((long) newsEntityListPagination.getSize());
-        response.setContent(getNewsOutResponseList);
+        return new CustomSuccessResponse<>(new PageableResponse<>(getNewsOutResponseList,
+                (long) newsEntityListPagination.getTotalElements()));
+    }
 
-        return new CustomSuccessResponse<>(response);
+    @Override
+    public CustomSuccessResponse<PageableResponse<List<GetNewsOutResponse>>> getNewsUsers(Integer page, Integer perPage) {
+        PageRequest pageRequest = PageRequest.of(page - 1, perPage);
+        Page<NewsEntity> newsEntityListPagination = newsRepository.findAll(pageRequest);
+
+        List<GetNewsOutResponse> getNewsOutResponseList = newsEntityListPagination.getContent()
+                .stream()
+                .map(newsEntity -> {
+                    GetNewsOutResponse response = newsMapper.entityNewsToDtoGetNews(newsEntity);
+                    response.setUserName(newsEntity.getAuthor().getName());
+                    response.setUserId(newsEntity.getAuthor().getId());
+
+                    Set<TagResponse> entityTagsList = newsEntity.getTags()
+                            .stream()
+                            .map(tagsEntity -> {
+                                TagResponse tagResponse = new TagResponse();
+                                tagResponse.setId(tagsEntity.getId());
+                                tagResponse.setTitle(tagsEntity.getTitle());
+                                return tagResponse;
+                            })
+                            .collect(Collectors.toSet());
+                    response.setTags(entityTagsList);
+                    return response; }
+                )
+                .toList();
+
+        return new CustomSuccessResponse<>(new PageableResponse<>(getNewsOutResponseList,
+                (long) newsEntityListPagination.getTotalElements()));
     }
 
 
