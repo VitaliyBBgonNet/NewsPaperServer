@@ -1,7 +1,5 @@
 package com.dunice.GoncharovVVAdvancedServer.dto.response;
 
-import com.dunice.GoncharovVVAdvancedServer.entity.NewsEntity;
-import com.dunice.GoncharovVVAdvancedServer.entity.TagsEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +24,5 @@ public class GetNewsOutResponse {
 
     private UUID userId;
 
-    private String userName;
+    private String username;
 }

@@ -1,12 +1,10 @@
 package com.dunice.GoncharovVVAdvancedServer.dto.request;
 
 import com.dunice.GoncharovVVAdvancedServer.constants.ValidationConstants;
-import com.dunice.GoncharovVVAdvancedServer.entity.TagsEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import java.util.List;
 import java.util.Set;
 
 @Data

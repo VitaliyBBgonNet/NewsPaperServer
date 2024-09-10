@@ -58,7 +58,7 @@ public class NewsServiceImpl implements NewsService {
                 .stream()
                 .map(newsEntity -> {
                     GetNewsOutResponse response = newsMapper.entityNewsToDtoGetNews(newsEntity);
-                    response.setUserName(newsEntity.getAuthor().getName());
+                    response.setUsername(newsEntity.getAuthor().getName());
                     response.setUserId(newsEntity.getAuthor().getId());
 
                     Set<TagResponse> entityTagsList = newsEntity.getTags()
@@ -88,7 +88,7 @@ public class NewsServiceImpl implements NewsService {
                 .stream()
                 .map(newsEntity -> {
                     GetNewsOutResponse response = newsMapper.entityNewsToDtoGetNews(newsEntity);
-                    response.setUserName(newsEntity.getAuthor().getName());
+                    response.setUsername(newsEntity.getAuthor().getName());
                     response.setUserId(newsEntity.getAuthor().getId());
 
                     Set<TagResponse> entityTagsList = newsEntity.getTags()
