@@ -1,7 +1,8 @@
-package com.dunice.GoncharovVVAdvancedServer.service;
+package com.dunice.GoncharovVVAdvancedServer.service.impl;
 
 import com.dunice.GoncharovVVAdvancedServer.entity.TagsEntity;
 import com.dunice.GoncharovVVAdvancedServer.repository.TagsRepository;
+import com.dunice.GoncharovVVAdvancedServer.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.Set;

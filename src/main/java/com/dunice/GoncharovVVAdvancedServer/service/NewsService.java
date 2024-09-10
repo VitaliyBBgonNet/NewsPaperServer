@@ -10,7 +10,16 @@ import java.util.List;
 public interface NewsService {
     CreateNewsSuccessResponse creteNews(NewsRequest newsRequest);
 
-    CustomSuccessResponse<PageableResponse<List<GetNewsOutResponse>>> getNewsUserById(String id, Integer page, Integer perPage);
+    CustomSuccessResponse<PageableResponse<List<GetNewsOutResponse>>> getNewsUserById(String id,
+                                                                                      Integer page,
+                                                                                      Integer perPage);
 
-    CustomSuccessResponse<PageableResponse<List<GetNewsOutResponse>>> getNewsUsers(Integer page, Integer perPage);
+    CustomSuccessResponse<PageableResponse<List<GetNewsOutResponse>>> getNewsUsers(Integer page,
+                                                                                   Integer perPage);
+
+    PageableResponse<List<GetNewsOutResponse>> findNews(String author,
+                                                        String keywords,
+                                                        Integer page,
+                                                        Integer perPage,
+                                                        List<String> tags);
 }

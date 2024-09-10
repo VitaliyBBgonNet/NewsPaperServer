@@ -69,4 +69,23 @@ public class NewsController {
             @Max(value = 100, message = ValidationConstants.TASKS_PER_PAGE_LESS_OR_EQUAL_100) Integer perPage) {
         return ResponseEntity.ok(newsService.getNewsUsers(page, perPage));
     }
+
+    @GetMapping("/find")
+    public ResponseEntity<PageableResponse<List<GetNewsOutResponse>>> findNews(
+            @RequestParam (name = "author") String author,
+
+            @RequestParam (name = "keywords") String keywords,
+
+            @RequestParam(value = "page", defaultValue = "1")
+            @Min(value = 1, message = ValidationConstants.PER_PAGE_MIN_NOT_VALID)
+            @Positive(message = ValidationConstants.TASKS_PAGE_GREATER_OR_EQUAL_1) Integer page,
+
+            @RequestParam(value = "perPage", defaultValue = "1")
+            @Min(value = 1, message = ValidationConstants.PARAM_PER_PAGE_NOT_NULL)
+            @Positive(message = ValidationConstants.TASKS_PER_PAGE_GREATER_OR_EQUAL_1)
+            @Max(value = 100, message = ValidationConstants.TASKS_PER_PAGE_LESS_OR_EQUAL_100) Integer perPage,
+
+            @RequestParam (value = "tags") List<String> tags) {
+        return ResponseEntity.ok(newsService.findNews(author, keywords, page, perPage, tags));
+    }
 }
