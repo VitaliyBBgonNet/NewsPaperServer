@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -55,9 +56,15 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    @Transactional
     public BaseSuccessResponse putUserNews(Long id, NewsRequest newsRequest) {
-        NewsEntity getNewsEntity = newsRepository.findByAuthorIdAndId(getUserIdByToken(), id)
+
+        NewsEntity getNewsEntity = newsRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+
+        if (!getNewsEntity.getAuthor().getId().equals(getUserIdByToken())) {
+            throw new CustomException(ErrorCodes.ACCESS_DENIED);
+        }
 
         newsMapper.updateUserNews(newsRequest, getNewsEntity);
         getNewsEntity.setTags(tagService.createSetTagsEntityAndSaveNoExistentTags(newsRequest.getTags()));
