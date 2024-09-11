@@ -6,6 +6,7 @@ import com.dunice.GoncharovVVAdvancedServer.entity.NewsEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface NewsMapper {
@@ -17,4 +18,9 @@ public interface NewsMapper {
 
     @Mapping(target = "tags", ignore = true)
     GetNewsOutResponse entityNewsToDtoGetNews(NewsEntity newsEntity);
+
+    @Mapping(target = "tags", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "author", ignore = true)
+    void updateUserNews(NewsRequest newsRequest, @MappingTarget NewsEntity newsEntity);
 }

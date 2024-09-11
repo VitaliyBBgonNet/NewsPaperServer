@@ -3,6 +3,7 @@ package com.dunice.GoncharovVVAdvancedServer.controllers;
 import com.dunice.GoncharovVVAdvancedServer.constants.StringConstants;
 import com.dunice.GoncharovVVAdvancedServer.constants.ValidationConstants;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.GetNewsOutResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PageableResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CreateNewsSuccessResponse;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -87,5 +89,12 @@ public class NewsController {
 
             @RequestParam (value = "tags") List<String> tags) {
         return ResponseEntity.ok(newsService.findNews(author, keywords, page, perPage, tags));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseSuccessResponse> putUserNews(
+            @PathVariable Long id,
+            @RequestBody @Valid NewsRequest newsRequest) {
+        return ResponseEntity.ok(newsService.putUserNews(id, newsRequest));
     }
 }
