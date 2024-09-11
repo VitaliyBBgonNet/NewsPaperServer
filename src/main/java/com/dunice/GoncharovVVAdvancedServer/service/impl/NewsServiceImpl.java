@@ -1,6 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.service.impl;
 
 import com.dunice.GoncharovVVAdvancedServer.Mappers.NewsMapper;
+import com.dunice.GoncharovVVAdvancedServer.Mappers.TagMapper;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.GetNewsOutResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PageableResponse;
@@ -27,6 +28,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class NewsServiceImpl implements NewsService {
+
+    private final TagMapper tagMapper;
 
     private final UserService userService;
 
@@ -101,12 +104,7 @@ public class NewsServiceImpl implements NewsService {
 
                     Set<TagResponse> entityTagsList = newsEntity.getTags()
                             .stream()
-                            .map(tagsEntity -> {
-                                TagResponse tagResponse = new TagResponse();
-                                tagResponse.setId(tagsEntity.getId());
-                                tagResponse.setTitle(tagsEntity.getTitle());
-                                return tagResponse;
-                            })
+                            .map(tagMapper::entityNewsTagsToDtoTagResponse)
                             .collect(Collectors.toSet());
                     response.setTags(entityTagsList);
                     return response; }
