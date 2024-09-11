@@ -1,6 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.service;
 
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.GetNewsOutResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PageableResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CreateNewsSuccessResponse;
@@ -22,4 +23,6 @@ public interface NewsService {
                                                         Integer page,
                                                         Integer perPage,
                                                         List<String> tags);
+
+    BaseSuccessResponse putUserNews(Long id, NewsRequest newsRequest);
 }

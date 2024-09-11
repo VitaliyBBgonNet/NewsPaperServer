@@ -2,13 +2,16 @@ package com.dunice.GoncharovVVAdvancedServer.service.impl;
 
 import com.dunice.GoncharovVVAdvancedServer.Mappers.NewsMapper;
 import com.dunice.GoncharovVVAdvancedServer.Mappers.TagMapper;
+import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.GetNewsOutResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PageableResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.TagResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CreateNewsSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.NewsEntity;
+import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.repository.NewsRepository;
 import com.dunice.GoncharovVVAdvancedServer.security.CustomUserDetails;
 import com.dunice.GoncharovVVAdvancedServer.service.NewsService;
@@ -20,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -49,6 +53,24 @@ public class NewsServiceImpl implements NewsService {
         newsRepository.save(newsEntity);
 
         return new CreateNewsSuccessResponse(newsEntity.getId());
+    }
+
+    @Override
+    @Transactional
+    public BaseSuccessResponse putUserNews(Long id, NewsRequest newsRequest) {
+
+        NewsEntity getNewsEntity = newsRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+
+        if (!getNewsEntity.getAuthor().getId().equals(getUserIdByToken())) {
+            throw new CustomException(ErrorCodes.ACCESS_DENIED);
+        }
+
+        newsMapper.updateUserNews(newsRequest, getNewsEntity);
+        getNewsEntity.setTags(tagService.createSetTagsEntityAndSaveNoExistentTags(newsRequest.getTags()));
+        newsRepository.save(getNewsEntity);
+
+        return new BaseSuccessResponse();
     }
 
     @Override
