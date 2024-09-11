@@ -54,7 +54,7 @@ public class NewsController {
             @Min(value = 1, message = ValidationConstants.PARAM_PER_PAGE_NOT_NULL)
             @Positive(message = ValidationConstants.TASKS_PER_PAGE_GREATER_OR_EQUAL_1)
             @Max(value = 100, message = ValidationConstants.TASKS_PER_PAGE_LESS_OR_EQUAL_100) Integer perPage) {
-        return ResponseEntity.ok(newsService.getNewsUsers(page, perPage));
+        return ResponseEntity.ok(newsService.getNewsUserById(id, page, perPage));
     }
 
     @GetMapping
