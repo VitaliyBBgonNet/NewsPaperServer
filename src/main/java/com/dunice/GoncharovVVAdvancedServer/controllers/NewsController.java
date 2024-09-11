@@ -17,6 +17,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -97,5 +98,13 @@ public class NewsController {
             @Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE) Long id,
                 @RequestBody @Valid NewsRequest newsRequest) {
         return ResponseEntity.ok(newsService.putUserNews(id, newsRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseSuccessResponse> deleteUserNews(
+            @PathVariable
+            @Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE) Long id) {
+
+        return ResponseEntity.ok(newsService.deleteUserNews(id));
     }
 }

@@ -25,4 +25,6 @@ public interface NewsService {
                                                         List<String> tags);
 
     BaseSuccessResponse putUserNews(Long id, NewsRequest newsRequest);
+
+    BaseSuccessResponse deleteUserNews(Long id);
 }
