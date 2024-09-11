@@ -94,7 +94,7 @@ public class NewsController {
     @PutMapping("/{id}")
     public ResponseEntity<BaseSuccessResponse> putUserNews(
             @PathVariable
-            @Positive Long id,
+            @Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE) Long id,
                 @RequestBody @Valid NewsRequest newsRequest) {
         return ResponseEntity.ok(newsService.putUserNews(id, newsRequest));
     }
