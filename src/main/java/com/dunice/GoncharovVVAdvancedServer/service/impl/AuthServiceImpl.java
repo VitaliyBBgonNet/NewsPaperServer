@@ -1,4 +1,4 @@
-package com.dunice.GoncharovVVAdvancedServer.service;
+package com.dunice.GoncharovVVAdvancedServer.service.impl;
 
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
@@ -10,6 +10,7 @@ import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.repository.AuthRepository;
 import com.dunice.GoncharovVVAdvancedServer.security.TokenSecurity;
+import com.dunice.GoncharovVVAdvancedServer.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

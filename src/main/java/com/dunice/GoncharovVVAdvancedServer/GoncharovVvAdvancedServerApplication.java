@@ -9,5 +9,4 @@ public class GoncharovVvAdvancedServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GoncharovVvAdvancedServerApplication.class, args);
 	}
-
 }
