@@ -74,6 +74,22 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    @Transactional
+    public BaseSuccessResponse deleteUserNews(Long id) {
+
+        NewsEntity getNewsEntity = newsRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+
+        if (!getNewsEntity.getAuthor().getId().equals(getUserIdByToken())) {
+            throw new CustomException(ErrorCodes.ACCESS_DENIED);
+        }
+
+        newsRepository.deleteById(getNewsEntity.getId());
+
+        return new BaseSuccessResponse();
+    }
+
+    @Override
     public CustomSuccessResponse<PageableResponse<List<GetNewsOutResponse>>> getNewsUserById(String id,
                                                                                              Integer page,
                                                                                              Integer perPage) {
