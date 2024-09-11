@@ -52,7 +52,6 @@ public class NewsServiceImpl implements NewsService {
     public CustomSuccessResponse<PageableResponse<List<GetNewsOutResponse>>> getNewsUserById(String id,
                                                                                              Integer page,
                                                                                              Integer perPage) {
-
         PageRequest pageRequest = PageRequest.of(page - 1, perPage);
         Page<NewsEntity> newsEntityListPagination = newsRepository.findByAuthorId(UUID.fromString(id), pageRequest);
 
@@ -76,7 +75,6 @@ public class NewsServiceImpl implements NewsService {
                                                                Integer page,
                                                                Integer perPage,
                                                                List<String> tags) {
-
         PageRequest pageRequest = PageRequest.of(page - 1, perPage);
         int tagCount = (tags == null) ? 0 : tags.size();
         Page<NewsEntity> listNewsFindBy = newsRepository.search(author,
@@ -94,7 +92,6 @@ public class NewsServiceImpl implements NewsService {
     }
 
     private List<GetNewsOutResponse> mapListGetNews(Page<NewsEntity> paginationList) {
-
         return paginationList.getContent()
                 .stream()
                 .map(newsEntity -> {
