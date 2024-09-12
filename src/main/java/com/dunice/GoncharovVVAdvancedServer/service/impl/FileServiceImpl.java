@@ -5,7 +5,6 @@ import com.dunice.GoncharovVVAdvancedServer.constants.StringConstants;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.service.FileService;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +39,6 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public UrlResource giveFile(String fileName) {
-
         try {
             Path filePath = Paths.get(StringConstants.WAY_FOR_UPLOAD_FILE).resolve(fileName).normalize();
             UrlResource resource = new UrlResource(filePath.toUri());

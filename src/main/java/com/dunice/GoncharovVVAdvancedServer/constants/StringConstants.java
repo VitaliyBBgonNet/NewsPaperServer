@@ -9,9 +9,5 @@ public interface StringConstants {
 
     String WAY_FOR_UPLOAD_FILE = "uploadsFiles/";
 
-    String FILE_UPLOAD_SUCCESSFUL = "File uploaded successfully: ";
-
-    String FAILED_UPLOAD_FILE = "File upload failed: ";
-
     String HTTP_WAY_TO_FILES = "http://localhost:8080/v1/file/";
 }

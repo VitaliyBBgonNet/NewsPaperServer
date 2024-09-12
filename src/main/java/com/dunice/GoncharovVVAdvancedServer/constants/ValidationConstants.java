@@ -50,5 +50,4 @@ public interface ValidationConstants {
     String ACCESS_DENIED = "no access for specific user";
     String FILE_MISSING = "File is missing";
     String FAILED_UPLOAD_FILE = "File upload failed: ";
-    String EXCEPTION_HANDLER_NOT_PROVIDED = "Exception handler not provided";
 }
