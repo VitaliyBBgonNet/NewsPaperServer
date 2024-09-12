@@ -54,8 +54,9 @@ public enum ErrorCodes {
     NEWS_IMAGE_HAS_TO_BE_PRESENT(45, ValidationConstants.NEWS_IMAGE_HAS_TO_BE_PRESENT),
     USER_WITH_THIS_EMAIL_ALREADY_EXIST(46, ValidationConstants.USER_WITH_THIS_EMAIL_ALREADY_EXIST),
     HTTP_MESSAGE_NOT_READABLE_EXCEPTION(47, ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION),
-    ACCESS_DENIED(48, ValidationConstants.ACCESS_DENIED);
-
+    ACCESS_DENIED(48, ValidationConstants.ACCESS_DENIED),
+    FILE_MISSING(49, ValidationConstants.FILE_MISSING),
+    FAILED_UPLOAD_FILE(50, ValidationConstants.FAILED_UPLOAD_FILE);
 
     private static final Map<String, ErrorCodes> ERROR_CODE_MAP = new HashMap<>();
 

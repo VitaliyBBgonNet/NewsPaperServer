@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("v1/news").permitAll()
                         .requestMatchers("v1/news/find").permitAll()
                         .requestMatchers("v1/news/user/").permitAll()
+                        .requestMatchers("v1/file/**").permitAll()
                         .anyRequest().authenticated()
                 ).exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
