@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MultipartException;
 import java.util.List;
 import java.util.Set;
 
@@ -18,8 +19,8 @@ import java.util.Set;
 public class CustomErrorAdvice {
 
     @ExceptionHandler
-    public ResponseEntity<CustomSuccessResponse> handle(CustomException e) {
-        Integer codes = e.getErrorCodes().getCode();
+    public ResponseEntity<CustomSuccessResponse> handle(CustomException customException) {
+        Integer codes = customException.getErrorCodes().getCode();
         return new ResponseEntity<>(new CustomSuccessResponse(codes), HttpStatus.BAD_REQUEST);
     }
 
@@ -46,5 +47,11 @@ public class CustomErrorAdvice {
                 .map(ErrorCodes::getCodeByMessage).toList();
 
         return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0), codes), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomSuccessResponse> handleMultipartException(MultipartException exception) {
+        Integer code = ErrorCodes.getCodeByMessage(exception.getMessage());
+        return new ResponseEntity<>(new CustomSuccessResponse(code), HttpStatus.BAD_REQUEST);
     }
 }

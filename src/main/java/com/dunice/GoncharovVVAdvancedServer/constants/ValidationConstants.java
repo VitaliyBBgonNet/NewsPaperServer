@@ -48,4 +48,5 @@ public interface ValidationConstants {
     String HTTP_MESSAGE_NOT_READABLE_EXCEPTION = "HTTP request is not valid";
     String USER_ROLE_NOT_NULL = "user role mustn't be null";
     String ACCESS_DENIED = "no access for specific user";
+    String FAILED_UPLOAD_FILE = "File upload failed: ";
 }
