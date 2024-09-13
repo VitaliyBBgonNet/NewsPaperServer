@@ -1,4 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.repository;
 
-public interface LogRepository {
+import com.dunice.GoncharovVVAdvancedServer.entity.LogEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LogRepository extends JpaRepository<LogEntity, Long> {
 }
