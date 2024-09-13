@@ -26,11 +26,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "v1/news").permitAll()
-                        .requestMatchers(HttpMethod.GET, "v1/news/find").permitAll()
-                        .requestMatchers(HttpMethod.GET, "v1/news/user/").permitAll()
-                        .requestMatchers("v1/file/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/news/**").permitAll()
+                        .requestMatchers("/file/**").permitAll()
                         .anyRequest().authenticated()
                 ).exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint)

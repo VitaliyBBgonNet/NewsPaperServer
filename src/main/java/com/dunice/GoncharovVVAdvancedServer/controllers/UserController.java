@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/${api.base.path}/user")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 @Validated
 public class UserController {
