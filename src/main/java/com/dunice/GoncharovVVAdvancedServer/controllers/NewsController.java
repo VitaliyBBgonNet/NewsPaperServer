@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/news")
+@RequestMapping("/${api.base.path}/news")
 @RequiredArgsConstructor
 @Validated
 public class NewsController {

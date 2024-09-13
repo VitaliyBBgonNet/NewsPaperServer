@@ -51,7 +51,7 @@ public class CustomErrorAdvice {
 
     @ExceptionHandler
     public ResponseEntity<CustomSuccessResponse> handleMultipartException(MultipartException exception) {
-        String messageException = exception.getMessage();
-        return new ResponseEntity<>(new CustomSuccessResponse(0), HttpStatus.BAD_REQUEST);
+        Integer code = ErrorCodes.getCodeByMessage(exception.getMessage());
+        return new ResponseEntity<>(new CustomSuccessResponse(code), HttpStatus.BAD_REQUEST);
     }
 }

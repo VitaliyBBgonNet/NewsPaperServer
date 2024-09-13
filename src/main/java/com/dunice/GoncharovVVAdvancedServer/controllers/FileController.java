@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("v1/file")
+@RequestMapping("${api.base.path}/file")
 @RequiredArgsConstructor
 public class FileController {
 

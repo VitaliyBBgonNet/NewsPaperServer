@@ -5,6 +5,7 @@ import com.dunice.GoncharovVVAdvancedServer.security.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,9 +27,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("v1/auth/**").permitAll()
-                        .requestMatchers("v1/news").permitAll()
-                        .requestMatchers("v1/news/find").permitAll()
-                        .requestMatchers("v1/news/user/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "v1/news").permitAll()
+                        .requestMatchers(HttpMethod.GET, "v1/news/find").permitAll()
+                        .requestMatchers(HttpMethod.GET, "v1/news/user/").permitAll()
                         .requestMatchers("v1/file/**").permitAll()
                         .anyRequest().authenticated()
                 ).exceptionHandling(exception -> exception
