@@ -18,10 +18,16 @@ public class LogEntity {
     private Long id;
 
     private String username;
+
     private String url;
+
     private String httpMethod;
+
     private String clientIp;
+
     private String statusCode;
+
     private LocalDateTime timestamp;
+
     private String errorMessage;
 }
