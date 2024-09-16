@@ -1,5 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.Interceptor;
 
+import com.dunice.GoncharovVVAdvancedServer.constants.StringConstants;
 import com.dunice.GoncharovVVAdvancedServer.entity.LogEntity;
 import com.dunice.GoncharovVVAdvancedServer.repository.LogRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,19 +19,12 @@ public class LoggingInterceptor implements HandlerInterceptor {
     private final LogRepository logRepository;
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Object handler) throws Exception {
-        return true;
-    }
-
-    @Override
     public void afterCompletion(HttpServletRequest request,
                                 HttpServletResponse response,
                                 Object handler, Exception ex) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = (authentication != null) ? authentication.getName() : "anyUser";
+        String username = (authentication != null) ? authentication.getName() : StringConstants.ANY_USER;
 
         LogEntity auditLog = new LogEntity();
         auditLog.setUsername(username);
@@ -39,7 +33,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
         auditLog.setClientIp(request.getRemoteAddr());
         auditLog.setStatusCode(String.valueOf(response.getStatus()));
         auditLog.setTimestamp(LocalDateTime.now());
-        auditLog.setErrorMessage(response.getHeader("errorHeader"));
+        auditLog.setErrorMessage(response.getHeader(StringConstants.ERROR_HEAD));
         logRepository.save(auditLog);
     }
 }
