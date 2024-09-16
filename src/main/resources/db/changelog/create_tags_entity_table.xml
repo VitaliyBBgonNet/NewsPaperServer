@@ -24,7 +24,11 @@
     </changeSet>
 
     <changeSet author="dunice (generated)" id="1726476170739-10">
-        <addUniqueConstraint columnNames="title" constraintName="tags_title_key" tableName="tags" schemaName="newspaper_schema"/>
+        <addUniqueConstraint
+                columnNames="title"
+                constraintName="tags_title_key"
+                tableName="tags"
+                schemaName="newspaper_schema"/>
     </changeSet>
 
 </databaseChangeLog>

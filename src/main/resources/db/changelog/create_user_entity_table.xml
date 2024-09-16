@@ -28,7 +28,10 @@
     </changeSet>
 
     <changeSet author="dunice (generated)" id="1726476170739-8">
-        <addUniqueConstraint columnNames="email" constraintName="users_email_key" tableName="users" schemaName="newspaper_schema"/>
+        <addUniqueConstraint columnNames="email"
+                             constraintName="users_email_key"
+                             tableName="users"
+                             schemaName="newspaper_schema"/>
     </changeSet>
 
 </databaseChangeLog>
