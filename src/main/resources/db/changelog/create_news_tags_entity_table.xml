@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="dunice (generated)" id="1726476170739-3">
+        <createTable tableName="news_tags" schemaName="newspaper_schema">
+            <column name="news_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="news_tags_pkey"/>
+            </column>
+            <column name="tag_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="news_tags_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="dunice (generated)" id="1726476170739-9">
+        <addForeignKeyConstraint baseColumnNames="news_id" baseTableName="news_tags" constraintName="fki06sdgpsvq2oxtharq5q1rc3x" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="news"/>
+    </changeSet>
+
+    <changeSet author="dunice (generated)" id="1726476170739-12">
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="news_tags" constraintName="fkmxybux66esr4l53vedblnrqvx" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tags"/>
+    </changeSet>
+
+</databaseChangeLog>
