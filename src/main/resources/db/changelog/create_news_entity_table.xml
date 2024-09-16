@@ -6,6 +6,13 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet author="dunice" id="1726476170739-1">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="news" schemaName="newspaper_schema"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="news" schemaName="newspaper_schema">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="news_pkey"/>
@@ -18,7 +25,15 @@
     </changeSet>
 
     <changeSet author="dunice (generated)" id="1726476170739-11">
-        <addForeignKeyConstraint baseColumnNames="author" baseTableName="news" constraintName="fkbw50ylr8m60pcb40da85l6o22" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users"/>
+        <addForeignKeyConstraint baseColumnNames="author"
+                                 baseTableName="news"
+                                 constraintName="fkbw50ylr8m60pcb40da85l6o22"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"
+                                 baseTableSchemaName="newspaper_schema"
+                                 referencedTableSchemaName="newspaper_schema" />
     </changeSet>
 
 </databaseChangeLog>

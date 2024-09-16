@@ -17,7 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "news")
+@Table(name = "news", schema = "newspaper_schema")
 public class NewsEntity {
 
     @Id

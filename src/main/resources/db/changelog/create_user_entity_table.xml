@@ -6,6 +6,13 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet author="dunice" id="1726476170739-2">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users" schemaName="newspaper_schema"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="users" schemaName="newspaper_schema">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
