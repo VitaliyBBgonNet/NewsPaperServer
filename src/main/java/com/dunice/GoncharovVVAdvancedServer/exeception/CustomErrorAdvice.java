@@ -4,6 +4,7 @@ import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,7 +22,9 @@ public class CustomErrorAdvice {
     @ExceptionHandler
     public ResponseEntity<CustomSuccessResponse> handle(CustomException customException) {
         Integer codes = customException.getErrorCodes().getCode();
-        return new ResponseEntity<>(new CustomSuccessResponse(codes), HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("errorHeader", customException.getErrorCodes().getMessage());
+        return new ResponseEntity<>(new CustomSuccessResponse(codes), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
@@ -30,28 +33,45 @@ public class CustomErrorAdvice {
 
         BindingResult bindingResult = exception.getBindingResult();
 
-        List<Integer> codes = bindingResult.getFieldErrors()
+        List<String> errorMessages = bindingResult.getFieldErrors()
                 .stream()
                 .map(FieldError::getDefaultMessage)
+                .toList();
+
+        List<Integer> codes = errorMessages
+                .stream()
                 .map(ErrorCodes::getCodeByMessage)
                 .toList();
 
-        return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0), codes), HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("errorHeader", errorMessages.get(0));
+
+        return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0), codes), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<CustomSuccessResponse> handleConstraintViolationException(ConstraintViolationException exception) {
         Set<ConstraintViolation<?>> messageException = exception.getConstraintViolations();
-        List<Integer> codes = messageException.stream()
-                .map(ConstraintViolation::getMessageTemplate)
-                .map(ErrorCodes::getCodeByMessage).toList();
 
-        return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0), codes), HttpStatus.BAD_REQUEST);
+        List<String> errorMessages = messageException.stream()
+                .map(ConstraintViolation::getMessageTemplate)
+                .toList();
+
+        List<Integer> codes = errorMessages.stream()
+                .map(ErrorCodes::getCodeByMessage)
+                .toList();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("errorHeader", errorMessages.get(0));
+
+        return new ResponseEntity<>(new CustomSuccessResponse(codes.get(0), codes), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<CustomSuccessResponse> handleMultipartException(MultipartException exception) {
         Integer code = ErrorCodes.getCodeByMessage(exception.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("errorHeader", exception.getMessage());
         return new ResponseEntity<>(new CustomSuccessResponse(code), HttpStatus.BAD_REQUEST);
     }
 }
