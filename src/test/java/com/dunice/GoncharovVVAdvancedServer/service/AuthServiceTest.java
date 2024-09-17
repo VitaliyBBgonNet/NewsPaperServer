@@ -2,6 +2,8 @@ package com.dunice.GoncharovVVAdvancedServer.service;
 
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
+import com.dunice.GoncharovVVAdvancedServer.constants.ValidationConstants;
+import com.dunice.GoncharovVVAdvancedServer.constantsTest.StringConstantsTest;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.AuthUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
@@ -17,9 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -49,24 +49,39 @@ public class AuthServiceTest {
     public void testRegistrationUserSuccess() throws CustomException {
 
         RegistrationUserRequest request = new RegistrationUserRequest();
-        request.setEmail("test@example.com");
-        request.setPassword("password");
+        request.setEmail(StringConstantsTest.EMAIL);
+        request.setPassword(StringConstantsTest.PASSWORD);
+        request.setName(StringConstantsTest.NAME);
+        request.setAvatar(StringConstantsTest.AVATAR);
+        request.setRole(StringConstantsTest.ROLE);
 
         UsersEntity entity = new UsersEntity();
         entity.setEmail(request.getEmail());
-        entity.setPassword("encodedPassword");
+        entity.setPassword(StringConstantsTest.ENCODE_PASSWORD);
+        entity.setName(request.getName());
+        entity.setAvatar(request.getAvatar());
+        entity.setRole(request.getRole());
+
+        LoginUserResponse loginTestResponse = new LoginUserResponse();
+
+        loginTestResponse.setId(StringConstantsTest.ID);
+        loginTestResponse.setEmail(request.getEmail());
+        loginTestResponse.setAvatar(request.getAvatar());
+        loginTestResponse.setName(request.getName());
+        loginTestResponse.setRole(request.getRole());
 
         when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
+        when(passwordEncoder.encode(request.getPassword())).thenReturn(StringConstantsTest.ENCODE_PASSWORD);
         when(userMapper.toEntityRegistrationUser(request)).thenReturn(entity);
         when(authRepository.save(entity)).thenReturn(entity);
-        when(userMapper.toLoginDto(entity)).thenReturn(new LoginUserResponse());
-        when(jwtToken.generateToken(entity.getId())).thenReturn("token");
+        when(userMapper.toLoginDto(entity)).thenReturn(loginTestResponse);
+        when(jwtToken.generateToken(entity.getId())).thenReturn(StringConstantsTest.TOKEN);
 
         CustomSuccessResponse<LoginUserResponse> response = authService.registrationUser(request);
 
         assertNotNull(response);
-        assertEquals("token", response.getData().getToken());
+        assertEquals(loginTestResponse, response.getData());
+
         verify(authRepository).findByEmail(request.getEmail());
         verify(authRepository).save(entity);
     }
@@ -75,7 +90,7 @@ public class AuthServiceTest {
     public void testRegistrationUserThrowsExceptionWhenUserExists() {
 
         RegistrationUserRequest request = new RegistrationUserRequest();
-        request.setEmail("test@example.com");
+        request.setEmail(StringConstantsTest.EMAIL);
 
         UsersEntity existingUser = new UsersEntity();
         existingUser.setEmail(request.getEmail());
@@ -90,22 +105,30 @@ public class AuthServiceTest {
     public void testAuthorizationUserSuccess() {
 
         AuthUserRequest request = new AuthUserRequest();
-        request.setEmail("test@example.com");
-        request.setPassword("password");
+        request.setEmail(StringConstantsTest.EMAIL);
+        request.setPassword(StringConstantsTest.PASSWORD);
 
         UsersEntity entity = new UsersEntity();
         entity.setEmail(request.getEmail());
-        entity.setPassword("encodedPassword");
+        entity.setPassword(StringConstantsTest.ENCODE_PASSWORD);
+
+        LoginUserResponse loginTestResponse = new LoginUserResponse();
+
+        loginTestResponse.setId(StringConstantsTest.ID);
+        loginTestResponse.setEmail(request.getEmail());
+        loginTestResponse.setAvatar(StringConstantsTest.AVATAR);
+        loginTestResponse.setName(StringConstantsTest.NAME);
+        loginTestResponse.setRole(StringConstantsTest.ROLE);
 
         when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(entity));
         when(passwordEncoder.matches(request.getPassword(), entity.getPassword())).thenReturn(true);
-        when(userMapper.toLoginDto(entity)).thenReturn(new LoginUserResponse());
-        when(jwtToken.generateToken(entity.getId())).thenReturn("token");
+        when(userMapper.toLoginDto(entity)).thenReturn(loginTestResponse);
+        when(jwtToken.generateToken(entity.getId())).thenReturn(StringConstantsTest.TOKEN);
 
         CustomSuccessResponse<LoginUserResponse> response = authService.authorizationUser(request);
 
         assertNotNull(response);
-        assertEquals("token", response.getData().getToken());
+        assertEquals(loginTestResponse, response.getData());
         verify(authRepository).findByEmail(request.getEmail());
     }
 
@@ -113,7 +136,7 @@ public class AuthServiceTest {
     public void testAuthorizationUserThrowsExceptionWhenUserNotFound() {
 
         AuthUserRequest request = new AuthUserRequest();
-        request.setEmail("test@example.com");
+        request.setEmail(StringConstantsTest.EMAIL);
 
         when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
 
@@ -125,12 +148,12 @@ public class AuthServiceTest {
     public void testAuthorizationUserThrowsExceptionWhenPasswordNotValid() {
 
         AuthUserRequest request = new AuthUserRequest();
-        request.setEmail("test@example.com");
-        request.setPassword("wrongPassword");
+        request.setEmail(StringConstantsTest.EMAIL);
+        request.setPassword(StringConstantsTest.PASSWORD);
 
         UsersEntity entity = new UsersEntity();
         entity.setEmail(request.getEmail());
-        entity.setPassword("encodedPassword");
+        entity.setPassword(StringConstantsTest.ENCODE_PASSWORD);
 
         when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(entity));
         when(passwordEncoder.matches(request.getPassword(), entity.getPassword())).thenReturn(false);
