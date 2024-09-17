@@ -1,6 +1,8 @@
 package com.dunice.GoncharovVVAdvancedServer.constantsTest;
 
-public interface StringConstantsTest {
+import java.util.UUID;
+
+public interface ConstantsTest {
 
     String EMAIL = "Test@gmail.com";
 
@@ -17,5 +19,4 @@ public interface StringConstantsTest {
     String ID = "UUID";
 
     String TOKEN = "Token";
-
 }
