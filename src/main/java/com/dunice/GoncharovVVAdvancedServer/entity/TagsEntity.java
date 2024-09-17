@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "tags")
+@Table(name = "tags", schema = "newspaper_schema")
 public class TagsEntity {
 
     @Id
