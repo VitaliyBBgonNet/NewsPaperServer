@@ -13,6 +13,7 @@
             </not>
         </preConditions>
 
+
         <createTable tableName="tags" schemaName="newspaper_schema">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="tags_pkey"/>

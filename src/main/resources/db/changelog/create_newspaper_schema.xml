@@ -10,5 +10,4 @@
             CREATE SCHEMA IF NOT EXISTS newspaper_schema;
         </sql>
     </changeSet>
-
 </databaseChangeLog>
