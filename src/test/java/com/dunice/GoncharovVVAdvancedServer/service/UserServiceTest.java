@@ -1,5 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.service;
 
+import ch.qos.logback.core.subst.Token;
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constantsTest.ConstantsTest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
@@ -131,6 +132,39 @@ public class UserServiceTest {
         assertEquals(publicUserResponse, response.getData());
 
         verify(userRepository).findById(uuid);
+        verify(userMapper).toPublicDto(usersEntity);
+    }
+
+    @Test
+    public void testGetUserInfo () {
+
+        UUID uuid = UUID.randomUUID();
+
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(uuid);
+        usersEntity.setName(ConstantsTest.NAME);
+        usersEntity.setEmail(ConstantsTest.EMAIL);
+        usersEntity.setRole(ConstantsTest.ROLE);
+        usersEntity.setAvatar(ConstantsTest.AVATAR);
+
+        PublicUserResponse publicUserResponse = new PublicUserResponse();
+        publicUserResponse.setId(String.valueOf(uuid));
+        publicUserResponse.setName(usersEntity.getName());
+        publicUserResponse.setEmail(usersEntity.getEmail());
+        publicUserResponse.setRole(usersEntity.getRole());
+        publicUserResponse.setAvatar(usersEntity.getAvatar());
+
+        when(userService.getUserIdByToken()).thenReturn(uuid);
+        when(userRepository.findAllById(uuid)).thenReturn(usersEntity);
+        when(userMapper.toPublicDto(usersEntity)).thenReturn(publicUserResponse);
+
+        CustomSuccessResponse<PublicUserResponse> response = userService.getUserInfo();
+
+        assertNotNull(response);
+        assertEquals(publicUserResponse, response.getData());
+
+        verify(userService).getUserIdByToken();
+        verify(userRepository).findAllById(uuid);
         verify(userMapper).toPublicDto(usersEntity);
     }
 

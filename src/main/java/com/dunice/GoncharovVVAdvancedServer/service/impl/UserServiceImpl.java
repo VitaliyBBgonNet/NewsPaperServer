@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         return new BaseSuccessResponse();
     }
 
-    private UUID getUserIdByToken() {
+    public UUID getUserIdByToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return UUID.fromString(((CustomUserDetails) authentication.getPrincipal()).getUsername());
     }
