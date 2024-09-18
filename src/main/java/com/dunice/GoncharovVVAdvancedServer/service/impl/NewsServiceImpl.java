@@ -11,6 +11,7 @@ import com.dunice.GoncharovVVAdvancedServer.dto.response.TagResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CreateNewsSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.NewsEntity;
+import com.dunice.GoncharovVVAdvancedServer.entity.TagsEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.repository.NewsRepository;
 import com.dunice.GoncharovVVAdvancedServer.security.CustomUserDetails;
@@ -24,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -140,13 +142,12 @@ public class NewsServiceImpl implements NewsService {
                     response.setUsername(newsEntity.getAuthor().getName());
                     response.setUserId(newsEntity.getAuthor().getId());
 
-                    Set<TagResponse> entityTagsList = newsEntity.getTags()
-                            .stream()
-                            .map(tagMapper::entityNewsTagsToDtoTagResponse)
-                            .collect(Collectors.toSet());
-                    response.setTags(entityTagsList);
-                    return response; }
-                )
+                    List<TagsEntity> tagsEntityList = new ArrayList<>(newsEntity.getTags());
+                    Set<TagResponse> tagResponses = tagMapper.entityNewsTagsToDtoTagResponse(tagsEntityList);
+                    response.setTags(tagResponses);
+
+                    return response;
+                })
                 .toList();
     }
 }

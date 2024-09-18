@@ -5,6 +5,7 @@ import com.dunice.GoncharovVVAdvancedServer.repository.TagsRepository;
 import com.dunice.GoncharovVVAdvancedServer.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Set<TagsEntity> createSetTagsEntityAndSaveNoExistentTags(Set<String> setForNews) {
 
-        Set<TagsEntity> setTitleFromRepository = tagsRepository.findByTitleIn(setForNews);
+        Set<TagsEntity> setTitleFromRepository = new HashSet<>(tagsRepository.findByTitleIn(setForNews));
 
         setForNews.removeAll(setTitleFromRepository.stream()
                 .map(TagsEntity::getTitle)

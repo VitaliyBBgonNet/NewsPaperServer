@@ -16,6 +16,8 @@ public interface NewsMapper {
     @Mapping(target = "id", ignore = true)
     NewsEntity dtoNewToEntityNews(NewsRequest newsRequest);
 
+    @Mapping(target = "username", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "tags", ignore = true)
     GetNewsOutResponse entityNewsToDtoGetNews(NewsEntity newsEntity);
 
