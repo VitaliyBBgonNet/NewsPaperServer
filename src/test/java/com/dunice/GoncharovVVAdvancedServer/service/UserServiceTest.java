@@ -15,20 +15,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 
 public class UserServiceTest {
@@ -77,7 +73,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getAllUsers() throws CustomException {
+    public void testGetAllUsersSuccess() throws CustomException {
 
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setId(UUID.randomUUID());
@@ -105,6 +101,37 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).findAll();
         verify(userMapper).toPublicViewListDto(usersEntityList);
+    }
+
+    @Test
+    public void testGetUserByIdSuccess(){
+
+        UUID uuid = UUID.randomUUID();
+
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(uuid);
+        usersEntity.setName(ConstantsTest.NAME);
+        usersEntity.setEmail(ConstantsTest.EMAIL);
+        usersEntity.setRole(ConstantsTest.ROLE);
+        usersEntity.setAvatar(ConstantsTest.AVATAR);
+
+        PublicUserResponse publicUserResponse = new PublicUserResponse();
+        publicUserResponse.setId(String.valueOf(uuid));
+        publicUserResponse.setName(usersEntity.getName());
+        publicUserResponse.setEmail(usersEntity.getEmail());
+        publicUserResponse.setRole(usersEntity.getRole());
+        publicUserResponse.setAvatar(usersEntity.getAvatar());
+
+        when(userRepository.findById(uuid)).thenReturn(Optional.of(usersEntity));
+        when(userMapper.toPublicDto(usersEntity)).thenReturn(publicUserResponse);
+
+        CustomSuccessResponse<PublicUserResponse> response = userService.getUserById(uuid);
+
+        assertNotNull(response);
+        assertEquals(publicUserResponse, response.getData());
+
+        verify(userRepository).findById(uuid);
+        verify(userMapper).toPublicDto(usersEntity);
     }
 
 }
