@@ -30,8 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UsersEntity findUserEntityById(UUID id) {
-        return userRepository.findById(getUserIdByToken())
-                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        return getUserOrThrowException(id);
     }
 
     @Override
@@ -42,8 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public CustomSuccessResponse<PublicUserResponse> getUserById(UUID id) {
 
-        UsersEntity getEntityUser = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        UsersEntity getEntityUser = getUserOrThrowException(id);
 
         return new CustomSuccessResponse<>(userMapper.toPublicDto(getEntityUser));
     }
@@ -58,8 +56,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CustomSuccessResponse<PutUserResponse> replaceUser(PutUserRequest putUserRequest) {
 
-        UsersEntity getEntityUser = userRepository.findById(getUserIdByToken())
-                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        UsersEntity getEntityUser = getUserOrThrowException(getUserIdByToken());
 
         userRepository
                 .findByEmailAndIdNot(putUserRequest.getEmail(), getEntityUser.getId())
@@ -78,8 +75,6 @@ public class UserServiceImpl implements UserService {
     public BaseSuccessResponse deleteUser() {
         UUID idFromToken = getUserIdByToken();
 
-        getUserOrThrowException(getUserIdByToken());
-
         userRepository.findById(idFromToken)
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
@@ -93,8 +88,9 @@ public class UserServiceImpl implements UserService {
         return UUID.fromString(((CustomUserDetails) authentication.getPrincipal()).getUsername());
     }
 
-    private void getUserOrThrowException (UUID uuid) {
-        userRepository.findById(uuid)
+    private UsersEntity getUserOrThrowException(UUID uuid) {
+        UsersEntity usersEntity = userRepository.findById(uuid)
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        return  usersEntity;
     }
 }
