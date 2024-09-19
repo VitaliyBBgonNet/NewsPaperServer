@@ -19,9 +19,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,10 +36,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 
 public class UserServiceTest {
 
@@ -53,53 +55,76 @@ public class UserServiceTest {
     @Mock
     private Authentication authentication;
 
+    private UUID userId;
+    private UsersEntity userEntity;
+    private PublicUserResponse publicUserResponse;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         SecurityContextHolder.setContext(securityContext);
+
+        userId = UUID.randomUUID();
+        userEntity = new UsersEntity();
+        userEntity.setId(userId);
+        userEntity.setName(ConstantsTest.NAME);
+        userEntity.setEmail(ConstantsTest.EMAIL);
+        userEntity.setRole(ConstantsTest.ROLE);
+        userEntity.setAvatar(ConstantsTest.AVATAR);
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(userId.toString()));
+    }
+
+    private PublicUserResponse createPublicUserResponse(UsersEntity user) {
+        PublicUserResponse response = new PublicUserResponse();
+        response.setId(String.valueOf(user.getId()));
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+        response.setAvatar(user.getAvatar());
+        return response;
+    }
+
+    private PutUserRequest createPutUserRequest(UsersEntity userEntity) {
+        PutUserRequest putUserRequest = new PutUserRequest();
+        putUserRequest.setName(userEntity.getName());
+        putUserRequest.setEmail(userEntity.getEmail());
+        putUserRequest.setRole(userEntity.getRole());
+        putUserRequest.setAvatar(userEntity.getAvatar());
+        return putUserRequest;
+    }
+
+    private UsersEntity createUserEntity() {
+        UsersEntity userEntity = new UsersEntity();
+        userEntity.setId(UUID.randomUUID());
+        return userEntity;
+    }
+
+    private void mockAuthentication(UUID userId) {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(userId.toString()));
     }
 
     @Test
     public void testFindUserEntityByIdSuccess() throws CustomException {
-
-        UUID userId = UUID.randomUUID();
-        UsersEntity user = new UsersEntity();
-        user.setId(userId);
-
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(userId.toString()));
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        mockAuthentication(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
 
         UsersEntity userEntityById = userService.findUserEntityById(userId);
 
         assertNotNull(userEntityById);
         assertEquals(userId, userEntityById.getId());
-
         verify(userRepository).findById(userId);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
     }
 
     @Test
     public void testGetAllUsersSuccess() throws CustomException {
 
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setId(UUID.randomUUID());
-
-        UsersEntity usersEntity1 = new UsersEntity();
-        usersEntity1.setId(UUID.randomUUID());
-
-        List<UsersEntity> usersEntityList = List.of(usersEntity, usersEntity1);
-
-        PublicUserResponse publicUserResponse = new PublicUserResponse();
-        publicUserResponse.setId(String.valueOf(usersEntity.getId()));
-
-        PublicUserResponse publicUserResponse1 = new PublicUserResponse();
-        publicUserResponse1.setId(String.valueOf(usersEntity1.getId()));
-
-        List<PublicUserResponse> userResponseList = List.of(publicUserResponse, publicUserResponse1);
+        List<UsersEntity> usersEntityList = List.of(createUserEntity(), createUserEntity());
+        List<PublicUserResponse> userResponseList = usersEntityList.stream()
+                .map(this::createPublicUserResponse)
+                .collect(Collectors.toList());
 
         when(userRepository.findAll()).thenReturn(usersEntityList);
         when(userMapper.toPublicViewListDto(usersEntityList)).thenReturn(userResponseList);
@@ -114,203 +139,108 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserByIdSuccess(){
+    public void testGetUserByIdSuccess() {
+        mockAuthentication(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
+        when(userMapper.toPublicDto(userEntity)).thenReturn(publicUserResponse);
 
-        UUID uuid = UUID.randomUUID();
-
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setId(uuid);
-        usersEntity.setName(ConstantsTest.NAME);
-        usersEntity.setEmail(ConstantsTest.EMAIL);
-        usersEntity.setRole(ConstantsTest.ROLE);
-        usersEntity.setAvatar(ConstantsTest.AVATAR);
-
-        PublicUserResponse publicUserResponse = new PublicUserResponse();
-        publicUserResponse.setId(String.valueOf(uuid));
-        publicUserResponse.setName(usersEntity.getName());
-        publicUserResponse.setEmail(usersEntity.getEmail());
-        publicUserResponse.setRole(usersEntity.getRole());
-        publicUserResponse.setAvatar(usersEntity.getAvatar());
-
-        when(userRepository.findById(uuid)).thenReturn(Optional.of(usersEntity));
-        when(userMapper.toPublicDto(usersEntity)).thenReturn(publicUserResponse);
-
-        CustomSuccessResponse<PublicUserResponse> response = userService.getUserById(uuid);
+        CustomSuccessResponse<PublicUserResponse> response = userService.getUserById(userId);
 
         assertNotNull(response);
         assertEquals(publicUserResponse, response.getData());
-
-        verify(userRepository).findById(uuid);
-        verify(userMapper).toPublicDto(usersEntity);
+        verify(userRepository).findById(userId);
+        verify(userMapper).toPublicDto(userEntity);
     }
 
     @Test
-    public void testGetUserInfoSuccess () {
-
-        UUID uuid = UUID.randomUUID();
-
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setId(uuid);
-        usersEntity.setName(ConstantsTest.NAME);
-        usersEntity.setEmail(ConstantsTest.EMAIL);
-        usersEntity.setRole(ConstantsTest.ROLE);
-        usersEntity.setAvatar(ConstantsTest.AVATAR);
-
-        PublicUserResponse publicUserResponse = new PublicUserResponse();
-        publicUserResponse.setId(String.valueOf(uuid));
-        publicUserResponse.setName(usersEntity.getName());
-        publicUserResponse.setEmail(usersEntity.getEmail());
-        publicUserResponse.setRole(usersEntity.getRole());
-        publicUserResponse.setAvatar(usersEntity.getAvatar());
-
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(uuid.toString()));
-
-        when(userRepository.findAllById(uuid)).thenReturn(usersEntity);
-        when(userMapper.toPublicDto(usersEntity)).thenReturn(publicUserResponse);
+    public void testGetUserInfoSuccess() {
+        mockAuthentication(userId);
+        when(userRepository.findAllById(userId)).thenReturn(userEntity);
+        when(userMapper.toPublicDto(userEntity)).thenReturn(publicUserResponse);
 
         CustomSuccessResponse<PublicUserResponse> response = userService.getUserInfo();
 
         assertNotNull(response);
         assertEquals(publicUserResponse, response.getData());
-
-        verify(userService).getUserIdByToken();
-        verify(userRepository).findAllById(uuid);
-        verify(userMapper).toPublicDto(usersEntity);
+        verify(userRepository).findAllById(userId);
+        verify(userMapper).toPublicDto(userEntity);
     }
 
     @Test
-    public void testReplaceUserSuccess(){
-
-        UUID uuid = UUID.randomUUID();
-
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setId(uuid);
-        usersEntity.setName(ConstantsTest.NAME);
-        usersEntity.setEmail(ConstantsTest.EMAIL);
-        usersEntity.setRole(ConstantsTest.ROLE);
-        usersEntity.setAvatar(ConstantsTest.AVATAR);
-
-        PutUserRequest putUserRequest = new PutUserRequest();
-        putUserRequest.setName(usersEntity.getName());
-        putUserRequest.setEmail(usersEntity.getEmail());
-        putUserRequest.setRole(usersEntity.getRole());
-        putUserRequest.setAvatar(usersEntity.getAvatar());
+    public void testReplaceUserSuccess() {
+        PutUserRequest putUserRequest = createPutUserRequest(userEntity);
 
         PutUserResponse putUserResponse = new PutUserResponse();
-        putUserResponse.setName(usersEntity.getName());
-        putUserResponse.setEmail(usersEntity.getEmail());
-        putUserResponse.setRole(usersEntity.getRole());
-        putUserResponse.setAvatar(usersEntity.getAvatar());
+        putUserResponse.setName(userEntity.getName());
+        putUserResponse.setEmail(userEntity.getEmail());
+        putUserResponse.setRole(userEntity.getRole());
+        putUserResponse.setAvatar(userEntity.getAvatar());
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(uuid.toString()));
-        when(userRepository.findById(uuid)).thenReturn(Optional.of(usersEntity));
-        when(userRepository.findByEmailAndIdNot(putUserRequest.getEmail(), usersEntity.getId())).thenReturn(Optional.empty());
-        doNothing().when(userMapper).updateUserFromPut(putUserRequest, usersEntity);
-        when(userRepository.save(usersEntity)).thenReturn(usersEntity);
-        when(userMapper.toPutUserResponseFromUserEntity(usersEntity)).thenReturn(putUserResponse);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
+        when(userRepository.findByEmailAndIdNot(putUserRequest.getEmail(), userEntity.getId())).thenReturn(Optional.empty());
+        doNothing().when(userMapper).updateUserFromPut(putUserRequest, userEntity);
+        when(userRepository.save(userEntity)).thenReturn(userEntity);
+        when(userMapper.toPutUserResponseFromUserEntity(userEntity)).thenReturn(putUserResponse);
 
         CustomSuccessResponse<PutUserResponse> response = userService.replaceUser(putUserRequest);
 
         assertNotNull(response);
-        assertEquals(putUserRequest.getName(), putUserResponse.getName());
-        assertEquals(putUserRequest.getEmail(), putUserResponse.getEmail());
-        assertEquals(putUserRequest.getRole(), putUserResponse.getRole());
-        assertEquals(putUserRequest.getAvatar(), putUserResponse.getAvatar());
-
-        verify(userRepository).findById(uuid);
-        verify(userRepository).findByEmailAndIdNot(putUserRequest.getEmail(), usersEntity.getId());
-        verify(userMapper).updateUserFromPut(putUserRequest, usersEntity);
-        verify(userRepository).save(usersEntity);
-        verify(userMapper).toPutUserResponseFromUserEntity(usersEntity);
+        assertEquals(putUserRequest.getName(), response.getData().getName());
+        verify(userRepository).findById(userId);
+        verify(userRepository).findByEmailAndIdNot(putUserRequest.getEmail(), userEntity.getId());
+        verify(userMapper).updateUserFromPut(putUserRequest, userEntity);
+        verify(userRepository).save(userEntity);
     }
 
     @Test
     public void testDeleteUserSuccess() {
-
-        UUID userId = UUID.randomUUID();
-
-        UsersEntity userEntity = new UsersEntity();
-        userEntity.setId(userId);
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(userId.toString()));
-
+        mockAuthentication(userId);
         when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
         doNothing().when(userRepository).deleteById(userId);
 
         BaseSuccessResponse response = userService.deleteUser();
 
         assertNotNull(response);
-
         verify(userRepository).findById(userId);
         verify(userRepository).deleteById(userId);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
     }
 
     @Test
     public void testFindUserEntityByIdThrowsException() {
-        UUID uuid = UUID.randomUUID();
+        mockAuthentication(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(uuid.toString()));
-
-        when(userRepository.findById(uuid)).thenReturn(Optional.empty());
-
-        CustomException exception = assertThrows(CustomException.class, () -> userService.findUserEntityById(uuid));
+        CustomException exception = assertThrows(CustomException.class, () -> userService.findUserEntityById(userId));
 
         assertEquals(ErrorCodes.USER_NOT_FOUND, exception.getErrorCodes());
-
-        verify(userRepository).findById(uuid);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
+        verify(userRepository).findById(userId);
     }
 
     @Test
     public void testReplaceUserThrowsExceptionWhenEmailExists() {
-
-        UUID userId = UUID.randomUUID();
-
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setId(userId);
-        usersEntity.setEmail(ConstantsTest.EMAIL);
-
         PutUserRequest putUserRequest = new PutUserRequest();
         putUserRequest.setEmail(ConstantsTest.EMAIL);
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(userId.toString()));
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(usersEntity));
-        when(userRepository.findByEmailAndIdNot(putUserRequest.getEmail(), userId)).thenReturn(Optional.of(usersEntity));
+        mockAuthentication(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
+        when(userRepository.findByEmailAndIdNot(putUserRequest.getEmail(), userId)).thenReturn(Optional.of(userEntity));
 
         CustomException exception = assertThrows(CustomException.class, () -> userService.replaceUser(putUserRequest));
 
         assertEquals(ErrorCodes.USER_WITH_THIS_EMAIL_ALREADY_EXIST, exception.getErrorCodes());
-
         verify(userRepository).findById(userId);
         verify(userRepository).findByEmailAndIdNot(putUserRequest.getEmail(), userId);
     }
 
     @Test
     public void testDeleteUserThrowsException() {
-        UUID userId = UUID.randomUUID();
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new CustomUserDetails(userId.toString()));
-
+        mockAuthentication(userId);
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         CustomException exception = assertThrows(CustomException.class, () -> userService.deleteUser());
 
         assertEquals(ErrorCodes.USER_NOT_FOUND, exception.getErrorCodes());
-
         verify(userRepository).findById(userId);
         verify(userRepository, never()).deleteById(userId);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
     }
 }

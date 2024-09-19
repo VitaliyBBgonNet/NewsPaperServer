@@ -42,125 +42,101 @@ public class AuthServiceTest {
     @InjectMocks
     private AuthServiceImpl authService;
 
+    private RegistrationUserRequest registrationRequest;
+    private AuthUserRequest authRequest;
+    private UsersEntity userEntity;
+    private LoginUserResponse loginResponse;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        setupTestData();
+    }
+
+    private void setupTestData() {
+        registrationRequest = new RegistrationUserRequest();
+        registrationRequest.setEmail(ConstantsTest.EMAIL);
+        registrationRequest.setPassword(ConstantsTest.PASSWORD);
+        registrationRequest.setName(ConstantsTest.NAME);
+        registrationRequest.setAvatar(ConstantsTest.AVATAR);
+        registrationRequest.setRole(ConstantsTest.ROLE);
+
+        userEntity = new UsersEntity();
+        userEntity.setEmail(registrationRequest.getEmail());
+        userEntity.setPassword(ConstantsTest.ENCODE_PASSWORD);
+        userEntity.setName(registrationRequest.getName());
+        userEntity.setAvatar(registrationRequest.getAvatar());
+        userEntity.setRole(registrationRequest.getRole());
+
+        loginResponse = new LoginUserResponse();
+        loginResponse.setId(ConstantsTest.ID);
+        loginResponse.setEmail(registrationRequest.getEmail());
+        loginResponse.setAvatar(registrationRequest.getAvatar());
+        loginResponse.setName(registrationRequest.getName());
+        loginResponse.setRole(registrationRequest.getRole());
+
+        authRequest = new AuthUserRequest();
+        authRequest.setEmail(ConstantsTest.EMAIL);
+        authRequest.setPassword(ConstantsTest.PASSWORD);
     }
 
     @Test
     public void testRegistrationUserSuccess() throws CustomException {
+        when(authRepository.findByEmail(registrationRequest.getEmail())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(registrationRequest.getPassword())).thenReturn(ConstantsTest.ENCODE_PASSWORD);
+        when(userMapper.toEntityRegistrationUser(registrationRequest)).thenReturn(userEntity);
+        when(authRepository.save(userEntity)).thenReturn(userEntity);
+        when(userMapper.toLoginDto(userEntity)).thenReturn(loginResponse);
+        when(jwtToken.generateToken(userEntity.getId())).thenReturn(ConstantsTest.TOKEN);
 
-        RegistrationUserRequest request = new RegistrationUserRequest();
-        request.setEmail(ConstantsTest.EMAIL);
-        request.setPassword(ConstantsTest.PASSWORD);
-        request.setName(ConstantsTest.NAME);
-        request.setAvatar(ConstantsTest.AVATAR);
-        request.setRole(ConstantsTest.ROLE);
-
-        UsersEntity entity = new UsersEntity();
-        entity.setEmail(request.getEmail());
-        entity.setPassword(ConstantsTest.ENCODE_PASSWORD);
-        entity.setName(request.getName());
-        entity.setAvatar(request.getAvatar());
-        entity.setRole(request.getRole());
-
-        LoginUserResponse loginTestResponse = new LoginUserResponse();
-
-        loginTestResponse.setId(ConstantsTest.ID);
-        loginTestResponse.setEmail(request.getEmail());
-        loginTestResponse.setAvatar(request.getAvatar());
-        loginTestResponse.setName(request.getName());
-        loginTestResponse.setRole(request.getRole());
-
-        when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(request.getPassword())).thenReturn(ConstantsTest.ENCODE_PASSWORD);
-        when(userMapper.toEntityRegistrationUser(request)).thenReturn(entity);
-        when(authRepository.save(entity)).thenReturn(entity);
-        when(userMapper.toLoginDto(entity)).thenReturn(loginTestResponse);
-        when(jwtToken.generateToken(entity.getId())).thenReturn(ConstantsTest.TOKEN);
-
-        CustomSuccessResponse<LoginUserResponse> response = authService.registrationUser(request);
+        CustomSuccessResponse<LoginUserResponse> response = authService.registrationUser(registrationRequest);
 
         assertNotNull(response);
-        assertEquals(loginTestResponse, response.getData());
+        assertEquals(loginResponse, response.getData());
 
-        verify(authRepository).findByEmail(request.getEmail());
-        verify(authRepository).save(entity);
+        verify(authRepository).findByEmail(registrationRequest.getEmail());
+        verify(authRepository).save(userEntity);
     }
 
     @Test
     public void testRegistrationUserThrowsExceptionWhenUserExists() {
-
-        RegistrationUserRequest request = new RegistrationUserRequest();
-        request.setEmail(ConstantsTest.EMAIL);
-
         UsersEntity existingUser = new UsersEntity();
-        existingUser.setEmail(request.getEmail());
+        existingUser.setEmail(registrationRequest.getEmail());
 
-        when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(existingUser));
+        when(authRepository.findByEmail(registrationRequest.getEmail())).thenReturn(Optional.of(existingUser));
 
-        CustomException thrown = assertThrows(CustomException.class, () -> authService.registrationUser(request));
+        CustomException thrown = assertThrows(CustomException.class, () -> authService.registrationUser(registrationRequest));
         assertEquals(ErrorCodes.USER_ALREADY_EXISTS, thrown.getErrorCodes());
     }
 
     @Test
     public void testAuthorizationUserSuccess() {
+        when(authRepository.findByEmail(authRequest.getEmail())).thenReturn(Optional.of(userEntity));
+        when(passwordEncoder.matches(authRequest.getPassword(), userEntity.getPassword())).thenReturn(true);
+        when(userMapper.toLoginDto(userEntity)).thenReturn(loginResponse);
+        when(jwtToken.generateToken(userEntity.getId())).thenReturn(ConstantsTest.TOKEN);
 
-        AuthUserRequest request = new AuthUserRequest();
-        request.setEmail(ConstantsTest.EMAIL);
-        request.setPassword(ConstantsTest.PASSWORD);
-
-        UsersEntity entity = new UsersEntity();
-        entity.setEmail(request.getEmail());
-        entity.setPassword(ConstantsTest.ENCODE_PASSWORD);
-
-        LoginUserResponse loginTestResponse = new LoginUserResponse();
-
-        loginTestResponse.setId(ConstantsTest.ID);
-        loginTestResponse.setEmail(request.getEmail());
-        loginTestResponse.setAvatar(ConstantsTest.AVATAR);
-        loginTestResponse.setName(ConstantsTest.NAME);
-        loginTestResponse.setRole(ConstantsTest.ROLE);
-
-        when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(entity));
-        when(passwordEncoder.matches(request.getPassword(), entity.getPassword())).thenReturn(true);
-        when(userMapper.toLoginDto(entity)).thenReturn(loginTestResponse);
-        when(jwtToken.generateToken(entity.getId())).thenReturn(ConstantsTest.TOKEN);
-
-        CustomSuccessResponse<LoginUserResponse> response = authService.authorizationUser(request);
+        CustomSuccessResponse<LoginUserResponse> response = authService.authorizationUser(authRequest);
 
         assertNotNull(response);
-        assertEquals(loginTestResponse, response.getData());
-        verify(authRepository).findByEmail(request.getEmail());
+        assertEquals(loginResponse, response.getData());
+        verify(authRepository).findByEmail(authRequest.getEmail());
     }
 
     @Test
     public void testAuthorizationUserThrowsExceptionWhenUserNotFound() {
+        when(authRepository.findByEmail(authRequest.getEmail())).thenReturn(Optional.empty());
 
-        AuthUserRequest request = new AuthUserRequest();
-        request.setEmail(ConstantsTest.EMAIL);
-
-        when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
-
-        CustomException thrown = assertThrows(CustomException.class, () -> authService.authorizationUser(request));
+        CustomException thrown = assertThrows(CustomException.class, () -> authService.authorizationUser(authRequest));
         assertEquals(ErrorCodes.USER_NOT_FOUND, thrown.getErrorCodes());
     }
 
     @Test
     public void testAuthorizationUserThrowsExceptionWhenPasswordNotValid() {
+        when(authRepository.findByEmail(authRequest.getEmail())).thenReturn(Optional.of(userEntity));
+        when(passwordEncoder.matches(authRequest.getPassword(), userEntity.getPassword())).thenReturn(false);
 
-        AuthUserRequest request = new AuthUserRequest();
-        request.setEmail(ConstantsTest.EMAIL);
-        request.setPassword(ConstantsTest.PASSWORD);
-
-        UsersEntity entity = new UsersEntity();
-        entity.setEmail(request.getEmail());
-        entity.setPassword(ConstantsTest.ENCODE_PASSWORD);
-
-        when(authRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(entity));
-        when(passwordEncoder.matches(request.getPassword(), entity.getPassword())).thenReturn(false);
-
-        CustomException thrown = assertThrows(CustomException.class, () -> authService.authorizationUser(request));
+        CustomException thrown = assertThrows(CustomException.class, () -> authService.authorizationUser(authRequest));
         assertEquals(ErrorCodes.USER_PASSWORD_NOT_VALID, thrown.getErrorCodes());
     }
 }

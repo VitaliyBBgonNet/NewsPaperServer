@@ -11,10 +11,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.multipart.MultipartFile;
 import com.dunice.GoncharovVVAdvancedServer.service.impl.FileServiceImpl;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,23 +27,30 @@ import static org.mockito.Mockito.when;
 
 public class FileServiceTest {
 
-
     @Mock
     private MultipartFile file;
 
     @InjectMocks
     private FileServiceImpl fileService;
 
+    private String fileName;
 
     @BeforeEach
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
         MockitoAnnotations.openMocks(this);
+        setupTestDirectory();
+        initializeFileServiceFields();
+        fileName = ConstantsTest.NAME_TEST_FILE;
+    }
 
+    private void setupTestDirectory() {
         File testDirectory = new File(ConstantsTest.UPLOAD);
         if (!testDirectory.exists()) {
             testDirectory.mkdir();
         }
+    }
 
+    private void initializeFileServiceFields() throws NoSuchFieldException, IllegalAccessException {
         Field httpWayField = FileServiceImpl.class.getDeclaredField(ConstantsTest.HTTP_WAY);
         httpWayField.setAccessible(true);
         httpWayField.set(fileService, ConstantsTest.LOCAL_HOST);
@@ -53,8 +62,6 @@ public class FileServiceTest {
 
     @Test
     public void testUploadFileSuccess() throws IOException {
-
-        String fileName = ConstantsTest.NAME_TEST_FILE;
         when(file.getOriginalFilename()).thenReturn(fileName);
         when(file.isEmpty()).thenReturn(false);
 
@@ -84,7 +91,7 @@ public class FileServiceTest {
     @Test
     public void testUploadFileThrowsExceptionOnIOException() throws IOException {
         when(file.isEmpty()).thenReturn(false);
-        when(file.getOriginalFilename()).thenReturn(ConstantsTest.NAME_TEST_FILE);
+        when(file.getOriginalFilename()).thenReturn(fileName);
         doThrow(new IOException()).when(file).transferTo(any(Path.class));
 
         CustomException exception = assertThrows(CustomException.class, () -> {
