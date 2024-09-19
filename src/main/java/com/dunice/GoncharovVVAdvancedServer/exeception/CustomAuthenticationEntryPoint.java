@@ -1,7 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.exeception;
 
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.BaseSuccessResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

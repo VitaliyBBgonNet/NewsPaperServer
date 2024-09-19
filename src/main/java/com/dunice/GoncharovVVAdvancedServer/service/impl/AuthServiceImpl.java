@@ -5,7 +5,7 @@ import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.AuthUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.repository.AuthRepository;

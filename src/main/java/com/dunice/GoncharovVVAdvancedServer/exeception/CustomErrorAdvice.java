@@ -1,7 +1,7 @@
 package com.dunice.GoncharovVVAdvancedServer.exeception;
 
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;

@@ -4,12 +4,12 @@ import com.dunice.GoncharovVVAdvancedServer.Mappers.NewsMapper;
 import com.dunice.GoncharovVVAdvancedServer.Mappers.TagMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.GetNewsOutResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PageableResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.TagResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CreateNewsSuccessResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CreateNewsSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.NewsEntity;
 import com.dunice.GoncharovVVAdvancedServer.entity.TagsEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service

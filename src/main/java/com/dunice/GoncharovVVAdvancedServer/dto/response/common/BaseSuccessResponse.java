@@ -1,4 +1,4 @@
-package com.dunice.GoncharovVVAdvancedServer.dto.response.Base;
+package com.dunice.GoncharovVVAdvancedServer.dto.response.common;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

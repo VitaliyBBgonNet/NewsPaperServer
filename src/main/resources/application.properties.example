@@ -3,10 +3,22 @@ spring.application.name=GoncharovVVAdvancedServer
 spring.datasource.url=jdbc:postgresql://{DB_HOST}:{DB_PORT}/{DB_NAME}
 spring.datasource.username={DB_USER}
 spring.datasource.password={DB_PASSWORD}
-spring.datasource.driver-class-name=org.postgresql.Driver
 
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=create
-spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=none
 spring.security.basic.enabled=false
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+jwt.secret={SECRET_KEY}
+jwt.expiration=86400000
+way.upload = {WAY_UPLOAD_FILES}
+http.way = {HTTP_WAY}
+server.servlet.context-path = {BASE_PATH}
+
+spring.liquibase.enabled=true
+spring.liquibase.change-log=classpath:/db/changelog/master.xml
+spring.jpa.properties.hibernate.default_schema=newspaper_schema
+
+
+
 

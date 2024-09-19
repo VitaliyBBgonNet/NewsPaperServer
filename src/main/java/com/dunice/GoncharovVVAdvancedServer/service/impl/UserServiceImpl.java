@@ -3,10 +3,10 @@ package com.dunice.GoncharovVVAdvancedServer.service.impl;
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.PutUserRequest;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PutUserResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.repository.UserRepository;
@@ -78,9 +78,10 @@ public class UserServiceImpl implements UserService {
     public BaseSuccessResponse deleteUser() {
         UUID idFromToken = getUserIdByToken();
 
+        getUserOrThrowException(getUserIdByToken());
+
         userRepository.findById(idFromToken)
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
-
 
         userRepository.deleteById(idFromToken);
 
@@ -90,5 +91,10 @@ public class UserServiceImpl implements UserService {
     public UUID getUserIdByToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return UUID.fromString(((CustomUserDetails) authentication.getPrincipal()).getUsername());
+    }
+
+    private void getUserOrThrowException (UUID uuid) {
+        userRepository.findById(uuid)
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
     }
 }

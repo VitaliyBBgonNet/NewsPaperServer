@@ -1,7 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.dto.response;
 
 import lombok.Data;
-
 @Data
 public class PutUserResponse {
     private String avatar;
