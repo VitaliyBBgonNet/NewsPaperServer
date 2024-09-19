@@ -12,6 +12,7 @@ import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CreateNewsSucces
 import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.NewsEntity;
 import com.dunice.GoncharovVVAdvancedServer.entity.TagsEntity;
+import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.repository.NewsRepository;
 import com.dunice.GoncharovVVAdvancedServer.security.CustomUserDetails;
@@ -60,8 +61,7 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     public BaseSuccessResponse putUserNews(Long id, NewsRequest newsRequest) {
 
-        NewsEntity getNewsEntity = newsRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+        NewsEntity getNewsEntity = getNewsOrThrowException(id);
 
         if (!getNewsEntity.getAuthor().getId().equals(getUserIdByToken())) {
             throw new CustomException(ErrorCodes.ACCESS_DENIED);
@@ -78,8 +78,7 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     public BaseSuccessResponse deleteUserNews(Long id) {
 
-        NewsEntity getNewsEntity = newsRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+        NewsEntity getNewsEntity = getNewsOrThrowException(id);
 
         if (!getNewsEntity.getAuthor().getId().equals(getUserIdByToken())) {
             throw new CustomException(ErrorCodes.ACCESS_DENIED);
@@ -148,5 +147,11 @@ public class NewsServiceImpl implements NewsService {
                     return response;
                 })
                 .toList();
+    }
+
+    private NewsEntity getNewsOrThrowException(Long id) {
+        NewsEntity newsEntity = newsRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+        return  newsEntity;
     }
 }
