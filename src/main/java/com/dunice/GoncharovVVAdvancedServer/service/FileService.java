@@ -1,6 +1,6 @@
 package com.dunice.GoncharovVVAdvancedServer.service;
 
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
 

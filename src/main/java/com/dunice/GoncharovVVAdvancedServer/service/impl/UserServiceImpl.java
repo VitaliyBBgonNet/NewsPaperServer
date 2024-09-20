@@ -3,10 +3,10 @@ package com.dunice.GoncharovVVAdvancedServer.service.impl;
 import com.dunice.GoncharovVVAdvancedServer.Mappers.UserMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.PutUserRequest;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PublicUserResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PutUserResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.repository.UserRepository;
@@ -30,8 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UsersEntity findUserEntityById(UUID id) {
-        return userRepository.findById(getUserIdByToken())
-                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        return getUserOrThrowException(id);
     }
 
     @Override
@@ -42,8 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public CustomSuccessResponse<PublicUserResponse> getUserById(UUID id) {
 
-        UsersEntity getEntityUser = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        UsersEntity getEntityUser = getUserOrThrowException(id);
 
         return new CustomSuccessResponse<>(userMapper.toPublicDto(getEntityUser));
     }
@@ -58,8 +56,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CustomSuccessResponse<PutUserResponse> replaceUser(PutUserRequest putUserRequest) {
 
-        UsersEntity getEntityUser = userRepository.findById(getUserIdByToken())
-                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        UsersEntity getEntityUser = getUserOrThrowException(getUserIdByToken());
 
         userRepository
                 .findByEmailAndIdNot(putUserRequest.getEmail(), getEntityUser.getId())
@@ -81,14 +78,19 @@ public class UserServiceImpl implements UserService {
         userRepository.findById(idFromToken)
                 .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
 
-
         userRepository.deleteById(idFromToken);
 
         return new BaseSuccessResponse();
     }
 
-    private UUID getUserIdByToken() {
+    public UUID getUserIdByToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return UUID.fromString(((CustomUserDetails) authentication.getPrincipal()).getUsername());
+    }
+
+    private UsersEntity getUserOrThrowException(UUID uuid) {
+        UsersEntity usersEntity = userRepository.findById(uuid)
+                .orElseThrow(() -> new CustomException(ErrorCodes.USER_NOT_FOUND));
+        return  usersEntity;
     }
 }

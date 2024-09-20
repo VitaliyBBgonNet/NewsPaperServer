@@ -4,13 +4,15 @@ import com.dunice.GoncharovVVAdvancedServer.Mappers.NewsMapper;
 import com.dunice.GoncharovVVAdvancedServer.Mappers.TagMapper;
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.GetNewsOutResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PageableResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.TagResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CreateNewsSuccessResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CreateNewsSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.entity.NewsEntity;
+import com.dunice.GoncharovVVAdvancedServer.entity.TagsEntity;
+import com.dunice.GoncharovVVAdvancedServer.entity.UsersEntity;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.repository.NewsRepository;
 import com.dunice.GoncharovVVAdvancedServer.security.CustomUserDetails;
@@ -24,10 +26,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -59,8 +61,7 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     public BaseSuccessResponse putUserNews(Long id, NewsRequest newsRequest) {
 
-        NewsEntity getNewsEntity = newsRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+        NewsEntity getNewsEntity = getNewsOrThrowException(id);
 
         if (!getNewsEntity.getAuthor().getId().equals(getUserIdByToken())) {
             throw new CustomException(ErrorCodes.ACCESS_DENIED);
@@ -77,8 +78,7 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     public BaseSuccessResponse deleteUserNews(Long id) {
 
-        NewsEntity getNewsEntity = newsRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+        NewsEntity getNewsEntity = getNewsOrThrowException(id);
 
         if (!getNewsEntity.getAuthor().getId().equals(getUserIdByToken())) {
             throw new CustomException(ErrorCodes.ACCESS_DENIED);
@@ -140,13 +140,18 @@ public class NewsServiceImpl implements NewsService {
                     response.setUsername(newsEntity.getAuthor().getName());
                     response.setUserId(newsEntity.getAuthor().getId());
 
-                    Set<TagResponse> entityTagsList = newsEntity.getTags()
-                            .stream()
-                            .map(tagMapper::entityNewsTagsToDtoTagResponse)
-                            .collect(Collectors.toSet());
-                    response.setTags(entityTagsList);
-                    return response; }
-                )
+                    List<TagsEntity> tagsEntityList = new ArrayList<>(newsEntity.getTags());
+                    Set<TagResponse> tagResponses = tagMapper.entityNewsTagsToDtoTagResponse(tagsEntityList);
+                    response.setTags(tagResponses);
+
+                    return response;
+                })
                 .toList();
+    }
+
+    private NewsEntity getNewsOrThrowException(Long id) {
+        NewsEntity newsEntity = newsRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCodes.NEWS_NOT_FOUND));
+        return  newsEntity;
     }
 }

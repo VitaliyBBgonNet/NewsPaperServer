@@ -1,9 +1,11 @@
 package com.dunice.GoncharovVVAdvancedServer.service.impl;
 
 import com.dunice.GoncharovVVAdvancedServer.constants.ErrorCodes;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.exeception.CustomException;
 import com.dunice.GoncharovVVAdvancedServer.service.FileService;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Getter
+@Setter
 @Service
 public class FileServiceImpl implements FileService {
 

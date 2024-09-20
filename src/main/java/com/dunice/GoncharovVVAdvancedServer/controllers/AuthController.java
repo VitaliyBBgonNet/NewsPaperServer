@@ -3,7 +3,7 @@ package com.dunice.GoncharovVVAdvancedServer.controllers;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.AuthUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.request.RegistrationUserRequest;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.LoginUserResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

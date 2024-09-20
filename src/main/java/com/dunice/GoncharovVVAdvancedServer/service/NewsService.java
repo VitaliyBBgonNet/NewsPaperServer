@@ -1,11 +1,11 @@
 package com.dunice.GoncharovVVAdvancedServer.service;
 
 import com.dunice.GoncharovVVAdvancedServer.dto.request.NewsRequest;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.Base.BaseSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.BaseSuccessResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.GetNewsOutResponse;
 import com.dunice.GoncharovVVAdvancedServer.dto.response.PageableResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CreateNewsSuccessResponse;
-import com.dunice.GoncharovVVAdvancedServer.dto.response.castom.CustomSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CreateNewsSuccessResponse;
+import com.dunice.GoncharovVVAdvancedServer.dto.response.common.CustomSuccessResponse;
 import java.util.List;
 
 public interface NewsService {

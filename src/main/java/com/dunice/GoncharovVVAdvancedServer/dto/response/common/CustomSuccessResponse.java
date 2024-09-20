@@ -1,4 +1,4 @@
-package com.dunice.GoncharovVVAdvancedServer.dto.response.castom;
+package com.dunice.GoncharovVVAdvancedServer.dto.response.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

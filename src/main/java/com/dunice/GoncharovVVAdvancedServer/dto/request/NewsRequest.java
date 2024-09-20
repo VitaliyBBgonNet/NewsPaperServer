@@ -17,7 +17,7 @@ public class NewsRequest {
     @Size(min = 3, max = 130, message = ValidationConstants.NEWS_IMAGE_HAS_TO_BE_PRESENT)
     private String image;
 
-    @NotEmpty(message = ValidationConstants.TAGS_NOT_VALID)// Смотреть сюда
+    @NotEmpty(message = ValidationConstants.TAGS_NOT_VALID)
     private Set<@NotBlank(message = ValidationConstants.TAGS_NOT_VALID) String> tags;
 
     @Size(min = 3, max = 160, message = ValidationConstants.NEWS_DESCRIPTION_SIZE_NOT_VALID)
