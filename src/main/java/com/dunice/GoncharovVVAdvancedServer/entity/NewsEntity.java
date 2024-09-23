@@ -12,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import java.util.Set;
 
 @Getter
@@ -37,7 +39,8 @@ public class NewsEntity {
 
     private String image;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author")
     private UsersEntity author;
 }
